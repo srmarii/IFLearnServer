@@ -1,7 +1,6 @@
 package iflearn.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Alternativa {
@@ -23,12 +23,19 @@ public class Alternativa {
 	private Boolean correta = false;
 	//-
 	
-	@OneToMany(mappedBy = "alternativa")
-	private List<Resposta> respostas = new ArrayList<>();
+//	@OneToMany(mappedBy = "alternativa")
+//	private List<Resposta> respostas = new ArrayList<>();
 	
 	@ManyToOne
 	@JoinColumn(name= "id_questao")
 	private Questao questao;
+	
+	@ManyToMany
+	@JoinTable(
+	name = "resposta", 
+	joinColumns = @JoinColumn(name = "id_pontuacao"), 
+	inverseJoinColumns = @JoinColumn(name = "id_alternativa"))
+	Set<Pontuacao> respostas;
 	
 	
 	//construtores

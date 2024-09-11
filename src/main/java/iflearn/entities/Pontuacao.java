@@ -1,15 +1,14 @@
 package iflearn.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Pontuacao {
@@ -30,9 +29,12 @@ public class Pontuacao {
 	@JoinColumn(name= "id_usuario")
 	private Usuario usuario;
 	
-	@OneToMany(mappedBy = "pontuacao")
-	private List<Resposta> respostas = new ArrayList<>();
+//	@OneToMany(mappedBy = "pontuacao")
+//	private List<Resposta> respostas = new ArrayList<>();
 
+	@ManyToMany(mappedBy = "respostas")
+	Set<Alternativa> respostas;
+	
 	//construtores
 	public Pontuacao() {
 		super();

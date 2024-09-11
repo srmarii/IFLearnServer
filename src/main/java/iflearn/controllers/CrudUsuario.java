@@ -36,6 +36,8 @@ public class CrudUsuario {
 			return ResponseEntity.badRequest().build();
 		}
 
+		u.setUsuarioNovo(true);
+		
 		Usuario uNovo = ur.save(u);
 		return ResponseEntity.ok(uNovo);
 	}
@@ -62,7 +64,6 @@ public class CrudUsuario {
         if (u.getId() == null || u.getNome() == null 
         		|| u.getEmail() == null 
 				|| u.getSenha() == null 
-				|| u.getCategoria() == null
 				|| u.getTurma() == null
 				|| ur.existsByEmail(u.getEmail())== true) {
 			return ResponseEntity.badRequest().build();
@@ -100,6 +101,61 @@ public class CrudUsuario {
 	@ResponseBody
 	public ResponseEntity<List<Usuario>> listarTodos() {
 		return ResponseEntity.ok(ur.findAll());
+	}
+	
+	//verificar se deu certo
+	@GetMapping("/login")
+	@ResponseBody
+	public ResponseEntity<Usuario> login(@RequestBody Usuario u){
+		 if (u.getNome() == null || u.getEmail() == null 
+					|| u.getSenha() == null 
+					|| u.getCategoria() == null
+					|| u.getTurma() == null) {
+				return ResponseEntity.badRequest().build();
+			}
+		 //como ver se existe cada atributo pro mesmo id?
+		 if(ur.existsByNome(u.getNome())== false 
+				 || ur.existsByEmail(u.getEmail())== false
+				 || ur.existsBySenha(u.getSenha())== false
+				 || ur.existsByCategoria(u.getCategoria())== false
+				 || ur.existsByTurma(u.getTurma())== false) {
+			 	return ResponseEntity.badRequest().build();
+		 }
+		 
+		if(u.getCategoria().equalsIgnoreCase("professor") && u.getUsuarioNovo() == true) {
+			trocaDeSenha(u);
+		}
+		 
+		
+		return ResponseEntity.ok(u);
+	}
+	
+	public ResponseEntity<Usuario> trocaDeSenha(@RequestBody Usuario u) {
+		// metodo de troca de senha, salvar + u.setUsuarioNovo(false)
+		String senhaNova = "";
+
+		// nesse caso, diferentemente do update, o front pede pro 
+		// usuario preencher apenas a senha velha e a senha nova, o 
+		// resto dos atributos preenchidos o front que envia sem pedir novamente pro usuario
+		if (u.getId() == null || u.getNome() == null 
+				|| u.getEmail() == null 
+				|| u.getSenha() == null
+				|| u.getTurma() == null 
+				|| senhaNova == null 
+						//ver se a senha velha e a senha nova são iguais
+				|| u.getSenha().equals(senhaNova)) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		Optional<Usuario> hasUser = ur.findById(u.getId());
+		if (hasUser.isEmpty()) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+			u.setSenha(senhaNova);
+			u.setUsuarioNovo(false);
+			Usuario uAtualizado = ur.save(u);
+			return ResponseEntity.ok(uAtualizado);
 	}
 
 }
