@@ -57,6 +57,20 @@ public class Questao {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
+	
+	public List<Alternativa> getAlternativas() {
+		return alternativas;
+	}
+	public void setAlternativas(List<Alternativa> alternativas) {
+		this.alternativas = alternativas;
+	}
+	
+	public Quiz getQuiz() {
+		return quiz;
+	}
+	public void setQuiz(Quiz quiz) {
+		this.quiz = quiz;
+	}
 	//-
 
 	

@@ -72,8 +72,22 @@ public class Alternativa {
 	public void setCorreta(Boolean correta) {
 		this.correta = correta;
 	}
-	//-
-		
+	
+	public Questao getQuestao() {
+		return questao;
+	}
+	public void setQuestao(Questao questao) {
+		this.questao = questao;
+	}
+	
+	public Set<Pontuacao> getRespostas() {
+		return respostas;
+	}
+	public void setRespostas(Set<Pontuacao> respostas) {
+		this.respostas = respostas;
+	}
+	//-	
+	
 
 }
 	

@@ -17,9 +17,12 @@ public class Material {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	private String nome;
+	
 	@Column(length = 2)
 	private String turma;
 	private Integer data;
+
 	//-
 	
 	@ManyToOne
@@ -48,6 +51,13 @@ public class Material {
 		this.id = id;
 	}
 	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
 	public String getTurma() {
 		return turma;
 	}
@@ -61,6 +71,15 @@ public class Material {
 	public void setData(Integer data) {
 		this.data = data;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	
 	//-
 	
 }

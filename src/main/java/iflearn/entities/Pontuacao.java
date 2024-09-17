@@ -53,6 +53,34 @@ public class Pontuacao {
 	public void setQtdPontos(Integer qtdPontos) {
 		this.qtdPontos = qtdPontos;
 	}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public Quiz getQuiz() {
+		return quiz;
+	}
+	public void setQuiz(Quiz quiz) {
+		this.quiz = quiz;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	public Set<Alternativa> getRespostas() {
+		return respostas;
+	}
+	public void setRespostas(Set<Alternativa> respostas) {
+		this.respostas = respostas;
+	}
 	//-
 	
 

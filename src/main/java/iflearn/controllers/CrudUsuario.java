@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import iflearn.entities.Usuario;
 import iflearn.repositories.UsuarioRepository;
 
+//primeiro crud
 @Controller
 @RequestMapping("/usuario")
 public class CrudUsuario {
@@ -103,7 +104,7 @@ public class CrudUsuario {
 		return ResponseEntity.ok(ur.findAll());
 	}
 	
-	//verificar se deu certo
+	//não funfou ainda
 	@GetMapping("/login")
 	@ResponseBody
 	public ResponseEntity<Usuario> login(@RequestBody Usuario u){
@@ -125,8 +126,8 @@ public class CrudUsuario {
 		if(u.getCategoria().equalsIgnoreCase("professor") && u.getUsuarioNovo() == true) {
 			trocaDeSenha(u);
 		}
-		 
 		
+//		return ResponseEntity.ok(ur.findById(u.getId()));
 		return ResponseEntity.ok(u);
 	}
 	

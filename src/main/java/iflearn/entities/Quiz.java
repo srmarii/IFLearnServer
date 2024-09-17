@@ -26,10 +26,14 @@ public class Quiz {
 	private String desc;
 	@Column
 	private String feedback;
+	
+	//transformar o tipo pra data!
 	@Column
 	private Integer dataCriacao;
-	@Column
-	private double nota;
+	
+	//como atualizar no banco que apaguei a coluna nota??
+//	@Column
+//	private Double nota;
 	//-
 	
 	@ManyToOne
@@ -54,7 +58,7 @@ public class Quiz {
 		this.desc = desc;
 		this.feedback = feedback;
 		this.dataCriacao = dataCriacao;
-		this.nota = nota;
+	//	this.nota = nota;
 	}
 	//-
 	
@@ -95,11 +99,32 @@ public class Quiz {
 		this.dataCriacao = dataCriacao;
 	}
 	
-	public double getNota() {
-		return nota;
+//	public Double getNota() {
+//		return nota;
+//	}
+//	public void setNota(Double nota) {
+//		this.nota = nota;
+//	}
+	
+	public Usuario getUsuario() {
+		return usuario;
 	}
-	public void setNota(double nota) {
-		this.nota = nota;
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	public List<Pontuacao> getPontos() {
+		return pontos;
+	}
+	public void setPontos(List<Pontuacao> pontos) {
+		this.pontos = pontos;
+	}
+	
+	public List<Questao> getQuestoes() {
+		return questoes;
+	}
+	public void setQuestoes(List<Questao> questoes) {
+		this.questoes = questoes;
 	}
 	//-
 	

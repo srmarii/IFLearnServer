@@ -106,5 +106,26 @@ public class Usuario {
 	public void setUsuarioNovo(Boolean usuarioNovo) {
 		this.usuarioNovo = usuarioNovo;
 	}
+
+	public List<Quiz> getQuizzes() {
+		return quizzes;
+	}
+	public void setQuizzes(List<Quiz> quizzes) {
+		this.quizzes = quizzes;
+	}
+
+	public List<Pontuacao> getPontos() {
+		return pontos;
+	}
+	public void setPontos(List<Pontuacao> pontos) {
+		this.pontos = pontos;
+	}
+
+	public List<Material> getMateriais() {
+		return materiais;
+	}
+	public void setMateriais(List<Material> materiais) {
+		this.materiais = materiais;
+	}
 	// -
 }
