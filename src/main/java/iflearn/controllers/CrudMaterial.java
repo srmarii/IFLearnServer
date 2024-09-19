@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Material;
+import iflearn.entities.Usuario;
 import iflearn.repositories.MaterialRepository;
+import iflearn.repositories.UsuarioRepository;
 
 //segundo crud
 @Controller
@@ -25,6 +27,9 @@ public class CrudMaterial {
 
 	@Autowired
 	private MaterialRepository mr;
+	
+	@Autowired
+	private UsuarioRepository  ur;
 	
 	@PostMapping("/create")
 	@ResponseBody
@@ -35,8 +40,24 @@ public class CrudMaterial {
 			return ResponseEntity.badRequest().build();
 		}
 		
-		Material mNovo = mr.save(m);
-		return ResponseEntity.ok(mNovo);
+		//try catch pra caso o id não exista
+		try {
+			//Usuario u = ur.findById(m.getUsuario().getId()).get();
+			
+			Material mNovo = mr.save(m);
+			
+//			// nao monta as listas para devolver para o front..
+//			u.setQuizzes(null);
+//			u.setMateriais(null);
+//			u.setPontos(null);
+//			
+//			// atualiza o objeto material com os dados do usuario para retornar ao front
+//			mNovo.setUsuario(u); 
+			
+			return ResponseEntity.ok(mNovo);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build(); 
+		}
 	}
 	
 	

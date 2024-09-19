@@ -15,38 +15,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import iflearn.entities.Quiz;
-import iflearn.repositories.QuizRepository;
+import iflearn.entities.Questao;
+import iflearn.repositories.QuestaoRepository;
 
-//terceiro crud
+
+//quarto crud
 @Controller
-@RequestMapping("/quiz")
-public class CrudQuiz {
+@RequestMapping("/questao")
+public class CrudQuestao {
 	
 	@Autowired
-	private QuizRepository qir;
+	private QuestaoRepository qur;
 	
 	@PostMapping("/create")
 	@ResponseBody
-	public ResponseEntity<Quiz> create(@RequestBody Quiz qi) {
-		if(qi.getNome() == null || qi.getDesc() == null
-			//	|| qi.getDataCriacao() == null
-				|| qi.getUsuario() == null) {
+	public ResponseEntity<Questao> create(@RequestBody Questao qu) {
+		if(qu.getDesc() == null) {// || qu.getQuiz() == null
+			//	|| qu.getAlternativas() == null) {
+	
 			return ResponseEntity.badRequest().build();
 		}
 		
-		Quiz qiNovo = qir.save(qi);
-		return ResponseEntity.ok(qiNovo);
+		Questao quNova = qur.save(qu);
+		return ResponseEntity.ok(quNova);
 	}
 	
 	@GetMapping("/read/{id_quiz}")
 	@ResponseBody
-	public ResponseEntity<Quiz> read(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<Questao> read(@PathVariable(name = "id_quiz") Integer id) {
 		if (id == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Quiz> hasUser = qir.findById(id);
+		Optional<Questao> hasUser = qur.findById(id);
 		if (hasUser.isEmpty())
 			return ResponseEntity.badRequest().build();
 		
@@ -57,48 +58,45 @@ public class CrudQuiz {
 	//como colocar que não pode trocar o usuario??
 	@PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<Quiz> update(@RequestBody Quiz qi) {        
-        if (qi.getId() == null || qi.getNome() == null 
-        		|| qi.getDesc() == null 
-				|| qi.getFeedback() == null
-			//	|| qi.getDataCriacao() == null
-				|| qi.getUsuario() == null) {
+    public ResponseEntity<Questao> update(@RequestBody Questao qu) {        
+        if (qu.getId() == null || qu.getDesc() == null 
+        		|| qu.getQuiz() == null
+				|| qu.getAlternativas() == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Quiz> hasUser = qir.findById(qi.getId());
+        Optional<Questao> hasUser = qur.findById(qu.getId());
         if (hasUser.isEmpty())
             return ResponseEntity.badRequest().build();
       
         else {
-	        Quiz qiAtualizado = qir.save(qi);
-	        return ResponseEntity.ok(qiAtualizado);
+        	Questao quAtualizada = qur.save(qu);
+	        return ResponseEntity.ok(quAtualizada);
     }
 	}
 
 	
 	@DeleteMapping("/delete/{id_quiz}")
 	@ResponseBody
-	public ResponseEntity<Quiz> delete(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<Questao> delete(@PathVariable(name = "id_quiz") Integer id) {
         if (id == null) {
             return ResponseEntity.badRequest().build();
         }
       
-        Optional<Quiz> hasUser = qir.findById(id);
+        Optional<Questao> hasUser = qur.findById(id);
         if (hasUser.isEmpty())
             return ResponseEntity.badRequest().build();
         
         else {
-        	qir.deleteById(id);
+        	qur.deleteById(id);
     		return ResponseEntity.noContent().build();
     }
 	}
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
-	public ResponseEntity<List<Quiz>> listarTodos() {
-		return ResponseEntity.ok(qir.findAll());
+	public ResponseEntity<List<Questao>> listarTodos() {
+		return ResponseEntity.ok(qur.findAll());
 	}
-	
 
 }

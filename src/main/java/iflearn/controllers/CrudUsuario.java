@@ -40,6 +40,7 @@ public class CrudUsuario {
 		u.setUsuarioNovo(true);
 		
 		Usuario uNovo = ur.save(u);
+		
 		return ResponseEntity.ok(uNovo);
 	}
 	
@@ -105,32 +106,63 @@ public class CrudUsuario {
 	}
 	
 	//não funfou ainda
-	@GetMapping("/login")
+//	@PostMapping("/login")
+//	@ResponseBody
+//	public ResponseEntity<Usuario> login(@RequestBody Usuario u){
+//		 if (u.getNome() == null || u.getEmail() == null 
+//					|| u.getSenha() == null 
+//					|| u.getCategoria() == null
+//					|| u.getTurma() == null) {
+//				return ResponseEntity.badRequest().build();
+//			}
+//		 //como ver se existe cada atributo pro mesmo id?
+//		 if(ur.existsByNome(u.getNome())== false 
+//				 || ur.existsByEmail(u.getEmail())== false
+//				 || ur.existsBySenha(u.getSenha())== false
+//				 || ur.existsByCategoria(u.getCategoria())== false
+//				 || ur.existsByTurma(u.getTurma())== false) {
+//			 	return ResponseEntity.badRequest().build();
+//		 }
+//		 
+//		 
+//		 //front
+//		if(u.getCategoria().equalsIgnoreCase("professor") && u.getUsuarioNovo() == true) {
+//			trocaDeSenha(u);
+//		}
+//		
+////		return ResponseEntity.ok(ur.findById(u.getId()));
+//		return ResponseEntity.ok(u);
+//	}
+	
+	
+	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<Usuario> login(@RequestBody Usuario u){
-		 if (u.getNome() == null || u.getEmail() == null 
-					|| u.getSenha() == null 
-					|| u.getCategoria() == null
-					|| u.getTurma() == null) {
+		
+		//não precisa da categoria pois assim que der certo o login, 
+		//o back envia o usuario (*) pro front e ali contém a categoria
+		 if (u.getEmail() == null || u.getSenha() == null
+					) {
 				return ResponseEntity.badRequest().build();
 			}
-		 //como ver se existe cada atributo pro mesmo id?
-		 if(ur.existsByNome(u.getNome())== false 
-				 || ur.existsByEmail(u.getEmail())== false
-				 || ur.existsBySenha(u.getSenha())== false
-				 || ur.existsByCategoria(u.getCategoria())== false
-				 || ur.existsByTurma(u.getTurma())== false) {
-			 	return ResponseEntity.badRequest().build();
-		 }
 		 
-		if(u.getCategoria().equalsIgnoreCase("professor") && u.getUsuarioNovo() == true) {
-			trocaDeSenha(u);
-		}
-		
-//		return ResponseEntity.ok(ur.findById(u.getId()));
-		return ResponseEntity.ok(u);
+		 Usuario uExistente = ur.findByEmailAndSenha(u.getEmail(), u.getSenha());
+		 
+		 if( uExistente == null  ) {
+		 	return ResponseEntity.badRequest().build();
+		 }		 
+		 
+		 // "limpa" o JSON de retorno - isto é, retorna apenas as informacoes necessarias neste momento...
+		 uExistente.setPontos(null);
+		 uExistente.setQuizzes(null);
+		 uExistente.setMateriais(null);
+		 
+		 //*
+		 return ResponseEntity.ok(uExistente);
 	}
 	
+	@PostMapping("/trocaDeSenha")
+	@ResponseBody
 	public ResponseEntity<Usuario> trocaDeSenha(@RequestBody Usuario u) {
 		// metodo de troca de senha, salvar + u.setUsuarioNovo(false)
 		String senhaNova = "";

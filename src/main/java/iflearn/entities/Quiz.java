@@ -4,6 +4,8 @@ package iflearn.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,12 +26,10 @@ public class Quiz {
 	private String nome;
 	@Column(name= "descricao", length = 300)
 	private String desc;
-	@Column
 	private String feedback;
 	
 	//transformar o tipo pra data!
-	@Column
-	private Integer dataCriacao;
+	//private Data dataCriacao;
 	
 	//como atualizar no banco que apaguei a coluna nota??
 //	@Column
@@ -51,13 +51,13 @@ public class Quiz {
 	public Quiz() {
 		super();
 	}
-	public Quiz(Integer id, String nome, String desc, String feedback, Integer dataCriacao, double nota) {
+	public Quiz(Integer id, String nome, String desc, String feedback, Data dataCriacao, double nota) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.desc = desc;
 		this.feedback = feedback;
-		this.dataCriacao = dataCriacao;
+	//	this.dataCriacao = dataCriacao;
 	//	this.nota = nota;
 	}
 	//-
@@ -92,12 +92,12 @@ public class Quiz {
 		this.feedback = feedback;
 	}
 	
-	public Integer getDataCriacao() {
-		return dataCriacao;
-	}
-	public void setDataCriacao(Integer dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
+//	public Data getDataCriacao() {
+//		return dataCriacao;
+//	}
+//	public void setDataCriacao(Data dataCriacao) {
+//		this.dataCriacao = dataCriacao;
+//	}
 	
 //	public Double getNota() {
 //		return nota;

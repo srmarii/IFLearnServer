@@ -23,12 +23,13 @@ public class Questao {
 	private String desc;
 	//-
 	
-	@OneToMany(mappedBy = "questao")
-	private List<Alternativa> alternativas = new ArrayList<>();
-	
 	@ManyToOne
 	@JoinColumn(name = "id_quiz")
 	private Quiz quiz;
+	
+	@OneToMany(mappedBy = "questao")
+	private List<Alternativa> alternativas = new ArrayList<>();
+	
 	
 	
 	//construtores
