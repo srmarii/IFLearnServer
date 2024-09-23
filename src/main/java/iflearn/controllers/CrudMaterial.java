@@ -41,7 +41,7 @@ public class CrudMaterial {
 		}
 		
 		//try catch pra caso o id não exista
-		try {
+//		try {
 			//Usuario u = ur.findById(m.getUsuario().getId()).get();
 			
 			Material mNovo = mr.save(m);
@@ -55,11 +55,10 @@ public class CrudMaterial {
 //			mNovo.setUsuario(u); 
 			
 			return ResponseEntity.ok(mNovo);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build(); 
-		}
+//		} catch (Exception e) {
+//			return ResponseEntity.badRequest().build(); 
+//		}
 	}
-	
 	
 	@GetMapping("/read/{id_material}")
 	@ResponseBody
@@ -68,31 +67,56 @@ public class CrudMaterial {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Material> hasUser = mr.findById(id);
-		if (hasUser.isEmpty())
+		Optional<Material> mExistente = mr.findById(id);
+		
+		if (mExistente.isEmpty()){
 			return ResponseEntity.badRequest().build();
 		
-		else
-			return ResponseEntity.ok(hasUser.get());
+		}else {
+			Material m = mExistente.get();
+			Usuario u = m.getUsuario();
+			u.setQuizzes(null);
+			u.setMateriais(null);
+			u.setPontos(null);
+			
+			m.setUsuario(u);
+			return ResponseEntity.ok(m);
+		}
 	}
-
-	//como colocar que não pode trocar o usuario??
+	
+	//trocar o usuario não fica disponível pra edição no front!
 	@PutMapping("/update")
     @ResponseBody
     public ResponseEntity<Material> update(@RequestBody Material m) {        
         if (m.getId() == null || m.getNome() == null 
-				|| m.getTurma() == null) {
-			//	|| m.getUsuario() == null) {
+				|| m.getTurma() == null
+				|| m.getData() == null
+				|| m.getUsuario() == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Material> hasUser = mr.findById(m.getId());
-        if (hasUser.isEmpty())
+        Optional<Material> mExistente = mr.findById(m.getId());
+        if (mExistente.isEmpty())
             return ResponseEntity.badRequest().build();
       
         else {
-	        Material mAtualizado = mr.save(m);
-	        return ResponseEntity.ok(mAtualizado);
+        	try {
+    			Usuario u = ur.findById(m.getUsuario().getId()).get();
+    			
+    			Material mAtualizado = mr.save(m);
+    			
+    			// nao monta as listas para devolver para o front..
+    			u.setQuizzes(null);
+    			u.setMateriais(null);
+    			u.setPontos(null);
+    			
+    			// atualiza o objeto material com os dados do usuario para retornar ao front, não salva as listas como null
+    			mAtualizado.setUsuario(u); 
+    			
+    			return ResponseEntity.ok(mAtualizado);
+    		} catch (Exception e) {
+    			return ResponseEntity.badRequest().build(); 
+    		}
     }
 	}
 
@@ -104,8 +128,8 @@ public class CrudMaterial {
             return ResponseEntity.badRequest().build();
         }
       
-        Optional<Material> hasUser = mr.findById(id);
-        if (hasUser.isEmpty())
+        Optional<Material> mExistente = mr.findById(id);
+        if (mExistente.isEmpty())
             return ResponseEntity.badRequest().build();
         
         else {

@@ -33,6 +33,7 @@ public class CrudUsuario {
 				|| u.getSenha() == null 
 				|| u.getCategoria() == null
 				|| u.getTurma() == null
+				|| u.getUsuarioNovo()
 				|| ur.existsByEmail(u.getEmail())== true) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -52,14 +53,22 @@ public class CrudUsuario {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Usuario> hasUser = ur.findById(id);
-		if (hasUser.isEmpty())
+		Optional<Usuario> uExistente = ur.findById(id);
+		if (uExistente.isEmpty())
 			return ResponseEntity.badRequest().build();
 		
-		else
-			return ResponseEntity.ok(hasUser.get());
+		else {
+			Usuario u = uExistente.get();
+			u.setQuizzes(null);
+			u.setMateriais(null);
+			u.setPontos(null);
+			
+			return ResponseEntity.ok(u);
+		}
+	//		return ResponseEntity.ok(uExistente.get());
 	}
 
+	//como deixar atualizar pro mesmo email
 	@PutMapping("/update")
     @ResponseBody
     public ResponseEntity<Usuario> update(@RequestBody Usuario u) {        
@@ -71,13 +80,22 @@ public class CrudUsuario {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Usuario> hasUser = ur.findById(u.getId());
-        if (hasUser.isEmpty())
+        Optional<Usuario> uExistente = ur.findById(u.getId());
+        if (uExistente.isEmpty())
             return ResponseEntity.badRequest().build();
       
         else {
-	        Usuario uAtualizado = ur.save(u);
-	        return ResponseEntity.ok(uAtualizado);
+        	try {
+    			u.setQuizzes(null);
+    			u.setMateriais(null);
+    			u.setPontos(null);
+    			
+    			Usuario uAtualizado = ur.save(u);
+    			
+    			return ResponseEntity.ok(uAtualizado);
+    		} catch (Exception e) {
+    			return ResponseEntity.badRequest().build(); 
+    		}
     }
 	}
 
@@ -89,8 +107,8 @@ public class CrudUsuario {
             return ResponseEntity.badRequest().build();
         }
       
-        Optional<Usuario> hasUser = ur.findById(id);
-        if (hasUser.isEmpty())
+        Optional<Usuario> uExistente = ur.findById(id);
+        if (uExistente.isEmpty())
             return ResponseEntity.badRequest().build();
         
         else {
@@ -105,87 +123,52 @@ public class CrudUsuario {
 		return ResponseEntity.ok(ur.findAll());
 	}
 	
-	//não funfou ainda
-//	@PostMapping("/login")
-//	@ResponseBody
-//	public ResponseEntity<Usuario> login(@RequestBody Usuario u){
-//		 if (u.getNome() == null || u.getEmail() == null 
-//					|| u.getSenha() == null 
-//					|| u.getCategoria() == null
-//					|| u.getTurma() == null) {
-//				return ResponseEntity.badRequest().build();
-//			}
-//		 //como ver se existe cada atributo pro mesmo id?
-//		 if(ur.existsByNome(u.getNome())== false 
-//				 || ur.existsByEmail(u.getEmail())== false
-//				 || ur.existsBySenha(u.getSenha())== false
-//				 || ur.existsByCategoria(u.getCategoria())== false
-//				 || ur.existsByTurma(u.getTurma())== false) {
-//			 	return ResponseEntity.badRequest().build();
-//		 }
-//		 
-//		 
-//		 //front
-//		if(u.getCategoria().equalsIgnoreCase("professor") && u.getUsuarioNovo() == true) {
-//			trocaDeSenha(u);
-//		}
-//		
-////		return ResponseEntity.ok(ur.findById(u.getId()));
-//		return ResponseEntity.ok(u);
-//	}
-	
-	
 	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<Usuario> login(@RequestBody Usuario u){
-		
 		//não precisa da categoria pois assim que der certo o login, 
 		//o back envia o usuario (*) pro front e ali contém a categoria
-		 if (u.getEmail() == null || u.getSenha() == null
-					) {
+		 if (u.getEmail() == null || u.getSenha() == null) {
 				return ResponseEntity.badRequest().build();
 			}
 		 
 		 Usuario uExistente = ur.findByEmailAndSenha(u.getEmail(), u.getSenha());
-		 
-		 if( uExistente == null  ) {
+		 if(uExistente == null) {
 		 	return ResponseEntity.badRequest().build();
 		 }		 
 		 
 		 // "limpa" o JSON de retorno - isto é, retorna apenas as informacoes necessarias neste momento...
-		 uExistente.setPontos(null);
 		 uExistente.setQuizzes(null);
 		 uExistente.setMateriais(null);
+		 uExistente.setPontos(null);
 		 
 		 //*
 		 return ResponseEntity.ok(uExistente);
 	}
-	
+
+	//não funfou ainda
+	String senhaNova;
 	@PostMapping("/trocaDeSenha")
 	@ResponseBody
 	public ResponseEntity<Usuario> trocaDeSenha(@RequestBody Usuario u) {
 		// metodo de troca de senha, salvar + u.setUsuarioNovo(false)
-		String senhaNova = "";
 
 		// nesse caso, diferentemente do update, o front pede pro 
 		// usuario preencher apenas a senha velha e a senha nova, o 
 		// resto dos atributos preenchidos o front que envia sem pedir novamente pro usuario
-		if (u.getId() == null || u.getNome() == null 
-				|| u.getEmail() == null 
-				|| u.getSenha() == null
-				|| u.getTurma() == null 
+		if (u.getId() == null || u.getSenha() == null 
 				|| senhaNova == null 
-						//ver se a senha velha e a senha nova são iguais
+			//ver se a senha velha e a senha nova são iguais
 				|| u.getSenha().equals(senhaNova)) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Usuario> hasUser = ur.findById(u.getId());
-		if (hasUser.isEmpty()) {
+		Optional<Usuario> uExistente = ur.findById(u.getId());
+		if (uExistente.isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
 		
-			u.setSenha(senhaNova);
+			u.setSenha(senhaNova);			
 			u.setUsuarioNovo(false);
 			Usuario uAtualizado = ur.save(u);
 			return ResponseEntity.ok(uAtualizado);

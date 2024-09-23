@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Quiz;
+import iflearn.entities.Usuario;
 import iflearn.repositories.QuizRepository;
+import iflearn.repositories.UsuarioRepository;
 
 //terceiro crud
 @Controller
@@ -25,6 +27,9 @@ public class CrudQuiz {
 	
 	@Autowired
 	private QuizRepository qir;
+	
+	@Autowired
+	private UsuarioRepository  ur;
 	
 	@PostMapping("/create")
 	@ResponseBody
@@ -46,12 +51,23 @@ public class CrudQuiz {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Quiz> hasUser = qir.findById(id);
-		if (hasUser.isEmpty())
+		Optional<Quiz> qiExistente = qir.findById(id);
+		if (qiExistente.isEmpty())
 			return ResponseEntity.badRequest().build();
 		
-		else
-			return ResponseEntity.ok(hasUser.get());
+		else {
+			Quiz qi = qiExistente.get();
+			Usuario u = qi.getUsuario();
+			u.setQuizzes(null);
+			u.setMateriais(null);
+			u.setPontos(null);
+			
+			qi.setUsuario(u);
+			qi.setPontos(null);
+			qi.setQuestoes(null);
+			
+			return ResponseEntity.ok(qi);
+		}
 	}
 
 	//como colocar que não pode trocar o usuario??
@@ -60,19 +76,37 @@ public class CrudQuiz {
     public ResponseEntity<Quiz> update(@RequestBody Quiz qi) {        
         if (qi.getId() == null || qi.getNome() == null 
         		|| qi.getDesc() == null 
-				|| qi.getFeedback() == null
+			//	|| qi.getFeedback() == null
 			//	|| qi.getDataCriacao() == null
 				|| qi.getUsuario() == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Quiz> hasUser = qir.findById(qi.getId());
-        if (hasUser.isEmpty())
+        Optional<Quiz> qiExistente = qir.findById(qi.getId());
+        if (qiExistente.isEmpty())
             return ResponseEntity.badRequest().build();
       
         else {
-	        Quiz qiAtualizado = qir.save(qi);
-	        return ResponseEntity.ok(qiAtualizado);
+        	try {
+    			Usuario u = ur.findById(qi.getUsuario().getId()).get();
+    			
+    			//save antes pra não salvar no banco o null, só setar pra retornar pro usuario
+    			Quiz qiAtualizado = qir.save(qi);
+    			
+    			u.setQuizzes(null);
+    			u.setMateriais(null);
+    			u.setPontos(null);
+    			
+    			qiAtualizado.setUsuario(u);
+    			qiAtualizado.setPontos(null);
+    			qiAtualizado.setQuestoes(null);
+    			
+    			qiAtualizado.setUsuario(u); 
+    			
+    			return ResponseEntity.ok(qiAtualizado);
+    		} catch (Exception e) {
+    			return ResponseEntity.badRequest().build(); 
+    		}
     }
 	}
 
@@ -84,8 +118,8 @@ public class CrudQuiz {
             return ResponseEntity.badRequest().build();
         }
       
-        Optional<Quiz> hasUser = qir.findById(id);
-        if (hasUser.isEmpty())
+        Optional<Quiz> qiExistente = qir.findById(id);
+        if (qiExistente.isEmpty())
             return ResponseEntity.badRequest().build();
         
         else {

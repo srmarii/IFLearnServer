@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Questao;
+import iflearn.entities.Quiz;
 import iflearn.repositories.QuestaoRepository;
-
+import iflearn.repositories.QuizRepository;
 
 //quarto crud
 @Controller
@@ -27,11 +28,17 @@ public class CrudQuestao {
 	@Autowired
 	private QuestaoRepository qur;
 	
+	@Autowired
+	private QuizRepository qir;
+	
 	@PostMapping("/create")
 	@ResponseBody
 	public ResponseEntity<Questao> create(@RequestBody Questao qu) {
-		if(qu.getDesc() == null) {// || qu.getQuiz() == null
-			//	|| qu.getAlternativas() == null) {
+		if(qu.getDesc() == null || qu.getQuiz() == null
+				
+				//como criar uma lista em json?
+				//perguntar: o mysql não cria coluna pra um array??
+				|| qu.getAlternativas() == null) {
 	
 			return ResponseEntity.badRequest().build();
 		}
@@ -47,12 +54,22 @@ public class CrudQuestao {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Questao> hasUser = qur.findById(id);
-		if (hasUser.isEmpty())
+		Optional<Questao> quExistente = qur.findById(id);
+		if (quExistente.isEmpty())
 			return ResponseEntity.badRequest().build();
 		
-		else
-			return ResponseEntity.ok(hasUser.get());
+		else {
+			Questao qu = quExistente.get();
+			Quiz qi = qu.getQuiz();
+			qi.setUsuario(null);
+			qi.setQuestoes(null);
+			qi.setPontos(null);
+			
+			qu.setQuiz(qi);
+			qu.setAlternativas(null);
+			
+			return ResponseEntity.ok(qu);
+		}
 	}
 
 	//como colocar que não pode trocar o usuario??
@@ -65,13 +82,29 @@ public class CrudQuestao {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Questao> hasUser = qur.findById(qu.getId());
-        if (hasUser.isEmpty())
+        Optional<Questao> quExistente = qur.findById(qu.getId());
+        if (quExistente.isEmpty())
             return ResponseEntity.badRequest().build();
       
         else {
-        	Questao quAtualizada = qur.save(qu);
-	        return ResponseEntity.ok(quAtualizada);
+        	try {
+    			Quiz qi = qir.findById(qu.getQuiz().getId()).get();
+    		
+    			Questao quAtualizado = qur.save(qu);
+    		    			
+    			qi.setUsuario(null);
+    			qi.setQuestoes(null);
+    			qi.setPontos(null);
+    			
+    			quAtualizado.setQuiz(qi);
+    			quAtualizado.setAlternativas(null);
+    			    			    			
+    			quAtualizado.setQuiz(qi); 
+    			
+    			return ResponseEntity.ok(quAtualizado);
+    		} catch (Exception e) {
+    			return ResponseEntity.badRequest().build(); 
+    		}
     }
 	}
 
@@ -83,8 +116,8 @@ public class CrudQuestao {
             return ResponseEntity.badRequest().build();
         }
       
-        Optional<Questao> hasUser = qur.findById(id);
-        if (hasUser.isEmpty())
+        Optional<Questao> quExistente = qur.findById(id);
+        if (quExistente.isEmpty())
             return ResponseEntity.badRequest().build();
         
         else {

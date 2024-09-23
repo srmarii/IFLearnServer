@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Alternativa;
+import iflearn.entities.Questao;
 import iflearn.repositories.AlternativaRepository;
+import iflearn.repositories.QuestaoRepository;
 
 //quinto crud
 @Controller
@@ -25,6 +27,8 @@ public class CrudAlternativa {
 	
 	@Autowired
 	private AlternativaRepository ar;
+	
+	@Autowired QuestaoRepository qur;
 	
 	@PostMapping("/create")
 	@ResponseBody
@@ -46,12 +50,21 @@ public class CrudAlternativa {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Optional<Alternativa> hasUser = ar.findById(id);
-		if (hasUser.isEmpty())
+		Optional<Alternativa> aExistente = ar.findById(id);
+		if (aExistente.isEmpty())
 			return ResponseEntity.badRequest().build();
 		
-		else
-			return ResponseEntity.ok(hasUser.get());
+		else {
+			Alternativa a = aExistente.get();
+			Questao qu = a.getQuestao();
+			qu.setAlternativas(null);
+			qu.setQuiz(null);
+			
+			a.setQuestao(qu);
+			a.setRespostas(null);
+			
+			return ResponseEntity.ok(a);
+		}
 	}
 
 	//como colocar que não pode trocar o usuario??
@@ -65,13 +78,29 @@ public class CrudAlternativa {
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Alternativa> hasUser = ar.findById(a.getId());
-        if (hasUser.isEmpty())
+        Optional<Alternativa> aExistente = ar.findById(a.getId());
+        if (aExistente.isEmpty())
             return ResponseEntity.badRequest().build();
       
         else {
-        	Alternativa aAtualizada = ar.save(a);
-	        return ResponseEntity.ok(aAtualizada);
+        	try {
+    			Questao qu = qur.findById(a.getQuestao().getId()).get();
+    			
+    			//save antes pra não salvar no banco o null, só setar pra retornar pro usuario
+    			Alternativa aAtualizada = ar.save(a);
+    			
+    			qu.setAlternativas(null);
+    			qu.setQuiz(null);
+    			
+    			aAtualizada.setQuestao(qu);
+    			aAtualizada.setRespostas(null);
+    			
+    			aAtualizada.setQuestao(qu); 
+    			
+    			return ResponseEntity.ok(aAtualizada);
+    		} catch (Exception e) {
+    			return ResponseEntity.badRequest().build(); 
+    		}
     }
 	}
 
@@ -83,8 +112,8 @@ public class CrudAlternativa {
             return ResponseEntity.badRequest().build();
         }
       
-        Optional<Alternativa> hasUser = ar.findById(id);
-        if (hasUser.isEmpty())
+        Optional<Alternativa> aExistente = ar.findById(id);
+        if (aExistente.isEmpty())
             return ResponseEntity.badRequest().build();
         
         else {
