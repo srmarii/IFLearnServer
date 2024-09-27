@@ -24,25 +24,25 @@ import iflearn.repositories.QuestaoRepository;
 @Controller
 @RequestMapping("/alternativa")
 public class CrudAlternativa {
-	
+
 	@Autowired
 	private AlternativaRepository ar;
-	
-	@Autowired QuestaoRepository qur;
-	
+
+	@Autowired
+	QuestaoRepository qur;
+
 	@PostMapping("/create")
 	@ResponseBody
 	public ResponseEntity<Alternativa> create(@RequestBody Alternativa a) {
-		if(a.getDesc() == null || a.getCorreta() == null
-				|| a.getQuestao() == null) {
-	
+		if (a.getDesc() == null || a.getCorreta() == null || a.getQuestao() == null) {
+
 			return ResponseEntity.badRequest().build();
 		}
-		
+
 		Alternativa aNova = ar.save(a);
 		return ResponseEntity.ok(aNova);
 	}
-	
+
 	@GetMapping("/read/{id_quiz}")
 	@ResponseBody
 	public ResponseEntity<Alternativa> read(@PathVariable(name = "id_quiz") Integer id) {
@@ -52,74 +52,69 @@ public class CrudAlternativa {
 
 		Optional<Alternativa> aExistente = ar.findById(id);
 		if (aExistente.isEmpty())
-			return ResponseEntity.badRequest().build();
-		
+			return ResponseEntity.notFound().build();
+
 		else {
 			Alternativa a = aExistente.get();
 			Questao qu = a.getQuestao();
 			qu.setAlternativas(null);
 			qu.setQuiz(null);
-			
+
 			a.setQuestao(qu);
 			a.setRespostas(null);
-			
+
 			return ResponseEntity.ok(a);
 		}
 	}
 
-	//como colocar que não pode trocar o usuario??
 	@PutMapping("/update")
-    @ResponseBody
-    public ResponseEntity<Alternativa> update(@RequestBody Alternativa a) {        
-		if(a.getId() == null || a.getDesc() == null 
-				|| a.getCorreta() == null
-				|| a.getQuestao() == null) {
-	
+	@ResponseBody
+	public ResponseEntity<Alternativa> update(@RequestBody Alternativa a) {
+		if (a.getId() == null || a.getDesc() == null || a.getCorreta() == null || a.getQuestao() == null) {
+
 			return ResponseEntity.badRequest().build();
 		}
 
-        Optional<Alternativa> aExistente = ar.findById(a.getId());
-        if (aExistente.isEmpty())
-            return ResponseEntity.badRequest().build();
-      
-        else {
-        	try {
-    			Questao qu = qur.findById(a.getQuestao().getId()).get();
-    			
-    			//save antes pra não salvar no banco o null, só setar pra retornar pro usuario
-    			Alternativa aAtualizada = ar.save(a);
-    			
-    			qu.setAlternativas(null);
-    			qu.setQuiz(null);
-    			
-    			aAtualizada.setQuestao(qu);
-    			aAtualizada.setRespostas(null);
-    			
-    			aAtualizada.setQuestao(qu); 
-    			
-    			return ResponseEntity.ok(aAtualizada);
-    		} catch (Exception e) {
-    			return ResponseEntity.badRequest().build(); 
-    		}
-    }
+		Optional<Alternativa> aExistente = ar.findById(a.getId());
+		if (aExistente.isEmpty())
+			return ResponseEntity.notFound().build();
+
+		else {
+			try {
+				Questao qu = qur.findById(a.getQuestao().getId()).get();
+
+				Alternativa aAtualizada = ar.save(a);
+
+				qu.setAlternativas(null);
+				qu.setQuiz(null);
+
+				aAtualizada.setQuestao(qu);
+				aAtualizada.setRespostas(null);
+
+				aAtualizada.setQuestao(qu);
+
+				return ResponseEntity.ok(aAtualizada);
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().build();
+			}
+		}
 	}
 
-	
 	@DeleteMapping("/delete/{id_quiz}")
 	@ResponseBody
 	public ResponseEntity<Alternativa> delete(@PathVariable(name = "id_quiz") Integer id) {
-        if (id == null) {
-            return ResponseEntity.badRequest().build();
-        }
-      
-        Optional<Alternativa> aExistente = ar.findById(id);
-        if (aExistente.isEmpty())
-            return ResponseEntity.badRequest().build();
-        
-        else {
-        	ar.deleteById(id);
-    		return ResponseEntity.noContent().build();
-    }
+		if (id == null) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		Optional<Alternativa> aExistente = ar.findById(id);
+		if (aExistente.isEmpty())
+			return ResponseEntity.notFound().build();
+
+		else {
+			ar.deleteById(id);
+			return ResponseEntity.noContent().build();
+		}
 	}
 
 	@GetMapping("/listarTodos")

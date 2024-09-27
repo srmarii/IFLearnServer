@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
 
 @Entity
 public class Usuario {
@@ -19,7 +20,7 @@ public class Usuario {
 	private Integer id;
 	@Column(length = 50)
 	private String nome;
-	@Column(length = 100)
+	//@Email
 	private String email;
 	@Column(length = 15)
 	private String senha;
