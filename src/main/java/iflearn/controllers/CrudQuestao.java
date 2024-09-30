@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Questao;
 import iflearn.entities.Quiz;
+import iflearn.entities.Usuario;
 import iflearn.repositories.QuestaoRepository;
 import iflearn.repositories.QuizRepository;
 
@@ -33,25 +34,21 @@ public class CrudQuestao {
 
 	@PostMapping("/create")
 	@ResponseBody
-	public ResponseEntity<Questao> create(@RequestBody Questao qu) {
-		if (qu.getDesc() == null || qu.getQuiz() == null
+	public ResponseEntity<?> create(@RequestBody Questao qu) {
+		if (qu.getDesc() == null || qu.getQuiz() == null) {
 
-		// como criar uma lista em json?
-		// perguntar: o mysql não cria coluna pra um array??
-				|| qu.getAlternativas() == null) {
-
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Questao quNova = qur.save(qu);
 		return ResponseEntity.ok(quNova);
 	}
 
-	@GetMapping("/read/{id_quiz}")
+	@GetMapping("/read/{id_questao}")
 	@ResponseBody
-	public ResponseEntity<Questao> read(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> read(@PathVariable(name = "id_questao") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Questao> quExistente = qur.findById(id);
@@ -74,9 +71,9 @@ public class CrudQuestao {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<Questao> update(@RequestBody Questao qu) {
+	public ResponseEntity<?> update(@RequestBody Questao qu) {
 		if (qu.getId() == null || qu.getDesc() == null || qu.getQuiz() == null || qu.getAlternativas() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Optional<Questao> quExistente = qur.findById(qu.getId());
@@ -105,11 +102,11 @@ public class CrudQuestao {
 		}
 	}
 
-	@DeleteMapping("/delete/{id_quiz}")
+	@DeleteMapping("/delete/{id_questao}")
 	@ResponseBody
-	public ResponseEntity<Questao> delete(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> delete(@PathVariable(name = "id_questao") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Questao> quExistente = qur.findById(id);
@@ -118,14 +115,28 @@ public class CrudQuestao {
 
 		else {
 			qur.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok().body("questão deletada");
 		}
 	}
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
 	public ResponseEntity<List<Questao>> listarTodos() {
-		return ResponseEntity.ok(qur.findAll());
+		List<Questao> lista = qur.findAll();
+
+		for (Questao qu : lista) {
+
+			if (qu.getQuiz() != null) {
+				Quiz qi = qu.getQuiz();
+				qi.setPontos(null);
+				qi.setQuestoes(null);
+				qi.setUsuario(null);
+			}
+
+			qu.setAlternativas(null);
+		}
+
+		return ResponseEntity.ok(lista);
 	}
 
 }

@@ -30,12 +30,14 @@ public class CrudUsuario {
 
 	@PostMapping("/create")
 	@ResponseBody
-	// valid pra testar a anotação @Email que coloquei no atributo email do Usuario, mas
-	// não funcionou
-	public ResponseEntity<Usuario> create(@RequestBody @Valid Usuario u) {
+	// pra que serve o "?"
+	public ResponseEntity<?> create(@RequestBody Usuario u) {
 		if (u.getNome() == null || u.getEmail() == null || u.getSenha() == null || u.getCategoria() == null
-				|| u.getTurma() == null || ur.existsByEmail(u.getEmail()) == true) {
-			return ResponseEntity.badRequest().build();
+				|| u.getTurma() == null) {
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
+		}
+		if(ur.existsByEmail(u.getEmail()) == true) {
+			return ResponseEntity.badRequest().body("email já existe no banco");
 		}
 
 		u.setUsuarioNovo(true);
@@ -48,9 +50,9 @@ public class CrudUsuario {
 	
 	@GetMapping("/read/{id_usuario}")
 	@ResponseBody
-	public ResponseEntity<Usuario> read(@PathVariable(name = "id_usuario") Integer id) {
+	public ResponseEntity<?> read(@PathVariable(name = "id_usuario") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Usuario> uExistente = ur.findById(id);
@@ -75,10 +77,10 @@ public class CrudUsuario {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<Usuario> update(@RequestBody Usuario u) {
+	public ResponseEntity<?> update(@RequestBody Usuario u) {
 		if (u.getId() == null || u.getNome() == null || u.getEmail() == null || u.getSenha() == null
 				|| u.getTurma() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Optional<Usuario> uExistente = ur.findById(u.getId());
@@ -99,7 +101,7 @@ public class CrudUsuario {
 
 					return ResponseEntity.ok(uAtualizado);
 				}
-					return ResponseEntity.badRequest().build();
+					return ResponseEntity.badRequest().body("o email já existe no banco");
 				
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().build();
@@ -109,9 +111,9 @@ public class CrudUsuario {
 
 	@DeleteMapping("/delete/{id_usuario}")
 	@ResponseBody
-	public ResponseEntity<Usuario> delete(@PathVariable(name = "id_usuario") Integer id) {
+	public ResponseEntity<?> delete(@PathVariable(name = "id_usuario") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Usuario> uExistente = ur.findById(id);
@@ -120,7 +122,7 @@ public class CrudUsuario {
 
 		else {
 			ur.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok().body("usuario deletado");
 		}
 	}
 
@@ -141,11 +143,9 @@ public class CrudUsuario {
 
 	@PostMapping("/login")
 	@ResponseBody
-	public ResponseEntity<Usuario> login(@RequestBody Usuario u) {
-		// não precisa da categoria pois assim que der certo o login,
-		// o back envia o usuario (*) pro front e ali contém a categoria
+	public ResponseEntity<?> login(@RequestBody Usuario u) {
 		if (u.getEmail() == null || u.getSenha() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parametros está nulo");
 		}
 
 		Usuario uExistente = ur.findByEmailAndSenha(u.getEmail(), u.getSenha());
@@ -174,7 +174,7 @@ public class CrudUsuario {
 
 		// se a senha for nula ou em branco
 		if (u.getSenha() == null || u.getSenha().trim().length() == 0) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("senha está nula ou em branco");
 		}
 
 		// busca do banco com base no ID informado pelo front
@@ -188,20 +188,20 @@ public class CrudUsuario {
 		// compara a senha do objeto que está chegando por parâmetro com a senha do
 		// banco
 		if (u.getSenha().equals(uExistente.get().getSenha())) {
-			return ResponseEntity.badRequest().body("Informe uma nova senha");
+			return ResponseEntity.badRequest().body("senha é igual a anterior");
 		}
 
 		// atualiza o objeto que veio do banco com a senha nova e o novo status
 		uExistente.get().setSenha(u.getSenha());
 		uExistente.get().setUsuarioNovo(false);
 
-//		u.setQuizzes(null);
-//		u.setMateriais(null);
-//		u.setPontos(null);
-
 		// salva e retorna atualizado
 		Usuario uAtualizado = ur.save(uExistente.get());
 
+		uExistente.get().setQuizzes(null);
+		uExistente.get().setMateriais(null);
+		uExistente.get().setPontos(null);
+		
 		return ResponseEntity.ok(uAtualizado);
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.entities.Material;
 import iflearn.entities.Quiz;
 import iflearn.entities.Usuario;
 import iflearn.repositories.QuizRepository;
@@ -33,11 +34,11 @@ public class CrudQuiz {
 
 	@PostMapping("/create")
 	@ResponseBody
-	public ResponseEntity<Quiz> create(@RequestBody Quiz qi) {
+	public ResponseEntity<?> create(@RequestBody Quiz qi) {
 		if (qi.getNome() == null || qi.getDesc() == null
 		// || qi.getData() == null
 				|| qi.getUsuario() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Quiz qiNovo = qir.save(qi);
@@ -46,9 +47,9 @@ public class CrudQuiz {
 
 	@GetMapping("/read/{id_quiz}")
 	@ResponseBody
-	public ResponseEntity<Quiz> read(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> read(@PathVariable(name = "id_quiz") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Quiz> qiExistente = qir.findById(id);
@@ -72,12 +73,12 @@ public class CrudQuiz {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<Quiz> update(@RequestBody Quiz qi) {
+	public ResponseEntity<?> update(@RequestBody Quiz qi) {
 		if (qi.getId() == null || qi.getNome() == null || qi.getDesc() == null
 		// || qi.getFeedback() == null
 		// || qi.getData() == null
 				|| qi.getUsuario() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Optional<Quiz> qiExistente = qir.findById(qi.getId());
@@ -109,9 +110,9 @@ public class CrudQuiz {
 
 	@DeleteMapping("/delete/{id_quiz}")
 	@ResponseBody
-	public ResponseEntity<Quiz> delete(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> delete(@PathVariable(name = "id_quiz") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Quiz> qiExistente = qir.findById(id);
@@ -120,14 +121,30 @@ public class CrudQuiz {
 
 		else {
 			qir.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok().body("quiz deletado");
 		}
 	}
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
 	public ResponseEntity<List<Quiz>> listarTodos() {
-		return ResponseEntity.ok(qir.findAll());
+
+		List<Quiz> lista = qir.findAll();
+
+		for (Quiz qi : lista) {
+
+			if (qi.getUsuario() != null) {
+				Usuario u = qi.getUsuario();
+				u.setQuizzes(null);
+				u.setMateriais(null);
+				u.setPontos(null);
+			}
+
+			qi.setPontos(null);
+			qi.setQuestoes(null);
+		}
+
+		return ResponseEntity.ok(lista);
 	}
 
 }

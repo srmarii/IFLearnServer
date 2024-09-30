@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Alternativa;
 import iflearn.entities.Questao;
+import iflearn.entities.Quiz;
 import iflearn.repositories.AlternativaRepository;
 import iflearn.repositories.QuestaoRepository;
 
@@ -33,21 +34,21 @@ public class CrudAlternativa {
 
 	@PostMapping("/create")
 	@ResponseBody
-	public ResponseEntity<Alternativa> create(@RequestBody Alternativa a) {
+	public ResponseEntity<?> create(@RequestBody Alternativa a) {
 		if (a.getDesc() == null || a.getCorreta() == null || a.getQuestao() == null) {
 
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Alternativa aNova = ar.save(a);
 		return ResponseEntity.ok(aNova);
 	}
 
-	@GetMapping("/read/{id_quiz}")
+	@GetMapping("/read/{id_alternativa}")
 	@ResponseBody
-	public ResponseEntity<Alternativa> read(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> read(@PathVariable(name = "id_alternativa") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Alternativa> aExistente = ar.findById(id);
@@ -69,10 +70,10 @@ public class CrudAlternativa {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<Alternativa> update(@RequestBody Alternativa a) {
+	public ResponseEntity<?> update(@RequestBody Alternativa a) {
 		if (a.getId() == null || a.getDesc() == null || a.getCorreta() == null || a.getQuestao() == null) {
 
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parametros está nulo");
 		}
 
 		Optional<Alternativa> aExistente = ar.findById(a.getId());
@@ -100,11 +101,11 @@ public class CrudAlternativa {
 		}
 	}
 
-	@DeleteMapping("/delete/{id_quiz}")
+	@DeleteMapping("/delete/{id_alternativa}")
 	@ResponseBody
-	public ResponseEntity<Alternativa> delete(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> delete(@PathVariable(name = "id_alternativa") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Alternativa> aExistente = ar.findById(id);
@@ -113,14 +114,29 @@ public class CrudAlternativa {
 
 		else {
 			ar.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok().body("alternativa deletada");
 		}
 	}
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
 	public ResponseEntity<List<Alternativa>> listarTodos() {
-		return ResponseEntity.ok(ar.findAll());
+		List<Alternativa> lista = ar.findAll();
+
+		for (Alternativa a : lista) {
+
+			if (a.getQuestao() != null) {
+				Questao qu = a.getQuestao();
+				qu.setAlternativas(null);
+				qu.setQuiz(null);
+			}
+
+			a.setQuestao(null);
+			a.setRespostas(null);
+
+		}
+
+		return ResponseEntity.ok(lista);
 	}
 
 }

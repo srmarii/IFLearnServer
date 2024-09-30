@@ -33,9 +33,9 @@ public class CrudMaterial {
 
 	@PostMapping("/create")
 	@ResponseBody
-	public ResponseEntity<Material> create(@RequestBody Material m) {
+	public ResponseEntity<?> create(@RequestBody Material m) {
 		if (m.getNome() == null || m.getTurma() == null || m.getData() == null || m.getUsuario() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Material mNovo = mr.save(m);
@@ -45,9 +45,9 @@ public class CrudMaterial {
 
 	@GetMapping("/read/{id_material}")
 	@ResponseBody
-	public ResponseEntity<Material> read(@PathVariable(name = "id_material") Integer id) {
+	public ResponseEntity<?> read(@PathVariable(name = "id_material") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Material> mExistente = mr.findById(id);
@@ -57,12 +57,15 @@ public class CrudMaterial {
 
 		} else {
 			Material m = mExistente.get();
-			Usuario u = m.getUsuario();
-			u.setQuizzes(null);
-			u.setMateriais(null);
-			u.setPontos(null);
 
-			m.setUsuario(u);
+			if (m.getUsuario() != null) {
+				Usuario u = m.getUsuario();
+				u.setQuizzes(null);
+				u.setMateriais(null);
+				u.setPontos(null);
+
+				m.setUsuario(u);
+			}
 			return ResponseEntity.ok(m);
 		}
 	}
@@ -70,10 +73,10 @@ public class CrudMaterial {
 	// trocar o usuario não fica disponível pra edição no front!
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<Material> update(@RequestBody Material m) {
+	public ResponseEntity<?> update(@RequestBody Material m) {
 		if (m.getId() == null || m.getNome() == null || m.getTurma() == null || m.getData() == null
 				|| m.getUsuario() == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 
 		Optional<Material> mExistente = mr.findById(m.getId());
@@ -104,9 +107,9 @@ public class CrudMaterial {
 
 	@DeleteMapping("/delete/{id_material}")
 	@ResponseBody
-	public ResponseEntity<Material> delete(@PathVariable(name = "id_material") Integer id) {
+	public ResponseEntity<?> delete(@PathVariable(name = "id_material") Integer id) {
 		if (id == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 
 		Optional<Material> mExistente = mr.findById(id);
@@ -115,38 +118,27 @@ public class CrudMaterial {
 
 		else {
 			mr.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok().body("material deletado");
 		}
 	}
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
 	public ResponseEntity<List<Material>> listarTodos() {
-		return ResponseEntity.ok(mr.findAll());
 
-//		List<Material> lista = mr.findAll();
-//
-//		for (Material m : lista) {
-//			Optional<Material> mExistente = mr.findById(m.getId());
-//			if (mExistente.isEmpty())
-//				return ResponseEntity.notFound().build();
-//			else {
-//				
-//			try {
-//				Usuario u = ur.findById(m.getUsuario().getId()).get();
-//
-//				u.setQuizzes(null);
-//				u.setMateriais(null);
-//				u.setPontos(null);
-//
-//				m.setUsuario(u);
-//			} catch (Exception e) {
-//				return ResponseEntity.badRequest().build();
-//			}
-//			}
-//		}
-//
-//		return ResponseEntity.ok(lista);
+		List<Material> lista = mr.findAll();
+
+		for (Material m : lista) {
+
+			if (m.getUsuario() != null) {
+				Usuario u = m.getUsuario();
+				u.setQuizzes(null);
+				u.setMateriais(null);
+				u.setPontos(null);
+			}
+		}
+
+		return ResponseEntity.ok(lista);
 	}
 
 }

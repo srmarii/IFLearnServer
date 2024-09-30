@@ -20,7 +20,6 @@ public class Usuario {
 	private Integer id;
 	@Column(length = 50)
 	private String nome;
-	//@Email
 	private String email;
 	@Column(length = 15)
 	private String senha;
