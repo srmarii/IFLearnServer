@@ -19,10 +19,6 @@ public class Usuario {
 	private Integer id;
 	@Column(length = 50)
 	private String nome;
-<<<<<<< HEAD
-=======
-	@Column(length = 100)
->>>>>>> 225dc8ff38eacfa8b0b0a1df883809e35116e23b
 	private String email;
 	@Column(length = 15)
 	private String senha;

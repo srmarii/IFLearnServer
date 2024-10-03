@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IfLearnMain {
+public class IFLearnMain {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IfLearnMain.class, args);
+		SpringApplication.run(IFLearnMain.class, args);
 	}
 
 }
