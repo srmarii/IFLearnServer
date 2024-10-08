@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import iflearn.entities.Material;
+import iflearn.entities.Questao;
 import iflearn.entities.Quiz;
 import iflearn.entities.Usuario;
 import iflearn.repositories.QuizRepository;
@@ -63,9 +64,11 @@ public class CrudQuiz {
 			u.setMateriais(null);
 			u.setPontos(null);
 
-			qi.setUsuario(u);
+	//		qi.setUsuario(u);
 			qi.setPontos(null);
-			qi.setQuestoes(null);
+	//		qi.setQuestoes(null);
+			qi.setUsuario(u);
+		
 
 			return ResponseEntity.ok(qi);
 		}

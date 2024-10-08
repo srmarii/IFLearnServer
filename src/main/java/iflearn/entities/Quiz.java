@@ -26,12 +26,13 @@ public class Quiz {
 	private String nome;
 	@Column(name= "descricao", length = 300)
 	private String desc;
-	private String feedback;
+
+	//pensar na lógica disso
+	//private String feedback;
 	
 	//transformar o tipo pra data!
 	//private Data dataCriacao;
 	
-	//como atualizar no banco que apaguei a coluna nota??
 //	@Column
 //	private Double nota;
 	//-
@@ -51,12 +52,12 @@ public class Quiz {
 	public Quiz() {
 		super();
 	}
-	public Quiz(Integer id, String nome, String desc, String feedback, Data dataCriacao, double nota) {
+	public Quiz(Integer id, String nome, String desc) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.desc = desc;
-		this.feedback = feedback;
+	//	this.feedback = feedback;
 	//	this.dataCriacao = dataCriacao;
 	//	this.nota = nota;
 	}
@@ -85,12 +86,12 @@ public class Quiz {
 		this.desc = desc;
 	}
 	
-	public String getFeedback() {
-		return feedback;
-	}
-	public void setFeedback(String feedback) {
-		this.feedback = feedback;
-	}
+//	public String getFeedback() {
+//		return feedback;
+//	}
+//	public void setFeedback(String feedback) {
+//		this.feedback = feedback;
+//	}
 	
 //	public Data getDataCriacao() {
 //		return dataCriacao;

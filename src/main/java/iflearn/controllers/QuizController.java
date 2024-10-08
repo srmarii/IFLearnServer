@@ -15,7 +15,6 @@ import iflearn.entities.Alternativa;
 import iflearn.entities.Pontuacao;
 import iflearn.entities.Questao;
 import iflearn.entities.Quiz;
-import iflearn.entities.Usuario;
 import iflearn.repositories.AlternativaRepository;
 import iflearn.repositories.PontuacaoRepository;
 import iflearn.repositories.QuestaoRepository;
@@ -39,7 +38,7 @@ public class QuizController {
 
 	@GetMapping("/jogo/{id_quiz}")
 	@ResponseBody
-	public ResponseEntity<?> read(@PathVariable(name = "id_quiz") Integer id) {
+	public ResponseEntity<?> jogo(@PathVariable(name = "id_quiz") Integer id) {
 		if (id == null) {
 			return ResponseEntity.badRequest().body("o id está nulo");
 		}
@@ -63,7 +62,7 @@ public class QuizController {
 						int contador = 0;
 						if (a.getCorreta() == true) {
 							for (int c = 0; c < listaA.size(); c++) {
-								contador = c;
+								contador++;
 							}
 
 							Optional<Pontuacao> pExistente = pr.findById(id);
@@ -72,8 +71,12 @@ public class QuizController {
 							} else {
 								Pontuacao p = pExistente.get();
 								p.setQtdPontos(contador);
+								
+								//?
+								//qi.setPontos(contador);
+								return ResponseEntity.ok(p.getQtdPontos());
 							}
-						
+
 						}
 
 					}
@@ -82,8 +85,15 @@ public class QuizController {
 
 			}
 
-			return ResponseEntity.ok(null);
+			return ResponseEntity.badRequest().body("nada funfou");
 		}
 	}
+	
+	
+	//pro ranking primeiramente pegar todos os termos da lista pontos de um usuario achado por id e somar
+	//depois armazenar num vetor essa soma dos pontos de cada usuario
+	//depois pegar todos termos desse vetor e organizar em asc (crescente) 
+	//retornar em ordem tanto o id do usuario quanto a soma de pontos
+	
 
 }
