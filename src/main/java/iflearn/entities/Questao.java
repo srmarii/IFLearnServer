@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,7 +28,7 @@ public class Questao {
 	@JoinColumn(name = "id_quiz")
 	private Quiz quiz;
 	
-	@OneToMany(mappedBy = "questao")
+	@OneToMany(mappedBy = "questao", fetch = FetchType.EAGER)
 	private List<Alternativa> alternativas = new ArrayList<>();
 	
 	

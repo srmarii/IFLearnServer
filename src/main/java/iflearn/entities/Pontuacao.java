@@ -1,13 +1,10 @@
 package iflearn.entities;
 
-import java.util.Set;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -31,9 +28,6 @@ public class Pontuacao {
 	
 //	@OneToMany(mappedBy = "pontuacao")
 //	private List<Resposta> respostas = new ArrayList<>();
-
-	@ManyToMany(mappedBy = "respostas")
-	Set<Alternativa> respostas;
 	
 	//construtores
 	public Pontuacao() {
@@ -73,13 +67,6 @@ public class Pontuacao {
 	}
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-	
-	public Set<Alternativa> getRespostas() {
-		return respostas;
-	}
-	public void setRespostas(Set<Alternativa> respostas) {
-		this.respostas = respostas;
 	}
 	//-
 	

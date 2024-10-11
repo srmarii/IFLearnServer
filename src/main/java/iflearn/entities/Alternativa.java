@@ -29,13 +29,7 @@ public class Alternativa {
 	@ManyToOne
 	@JoinColumn(name= "id_questao")
 	private Questao questao;
-	
-	@ManyToMany
-	@JoinTable(
-	name = "resposta", 
-	joinColumns = @JoinColumn(name = "id_pontuacao"), 
-	inverseJoinColumns = @JoinColumn(name = "id_alternativa"))
-	Set<Pontuacao> respostas;
+
 	
 	
 	//construtores
@@ -79,13 +73,7 @@ public class Alternativa {
 	public void setQuestao(Questao questao) {
 		this.questao = questao;
 	}
-	
-	public Set<Pontuacao> getRespostas() {
-		return respostas;
-	}
-	public void setRespostas(Set<Pontuacao> respostas) {
-		this.respostas = respostas;
-	}
+
 	//-	
 	
 
