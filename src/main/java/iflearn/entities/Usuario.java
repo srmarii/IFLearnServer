@@ -17,13 +17,11 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(length = 50)
 	private String nome;
+	private String sobrenome;
 	private String email;
-	@Column(length = 15)
 	private String senha;
 	private String categoria;
-	@Column(length = 2)
 	private String turma;
 	private Boolean usuarioNovo;
 	// -
@@ -42,8 +40,8 @@ public class Usuario {
 		super();
 	}
 
-	public Usuario(Integer id, String nome, String email, String senha, String categoria, String turma,
-			boolean usuarioNovo) {
+	public Usuario(Integer id, String nome, String sobrenome, String email, String senha, String categoria,
+			String turma, boolean usuarioNovo) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -60,6 +58,7 @@ public class Usuario {
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -67,13 +66,23 @@ public class Usuario {
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getSobrenome() {
+		return sobrenome;
+	}
+
+	public void setSobrenome(String sobrenome) {
+		this.sobrenome = sobrenome;
 	}
 
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -81,6 +90,7 @@ public class Usuario {
 	public String getSenha() {
 		return senha;
 	}
+
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
@@ -88,6 +98,7 @@ public class Usuario {
 	public String getCategoria() {
 		return categoria;
 	}
+
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
@@ -95,6 +106,7 @@ public class Usuario {
 	public String getTurma() {
 		return turma;
 	}
+
 	public void setTurma(String turma) {
 		this.turma = turma;
 	}
@@ -102,6 +114,7 @@ public class Usuario {
 	public Boolean getUsuarioNovo() {
 		return usuarioNovo;
 	}
+
 	public void setUsuarioNovo(Boolean usuarioNovo) {
 		this.usuarioNovo = usuarioNovo;
 	}
@@ -109,6 +122,7 @@ public class Usuario {
 	public List<Quiz> getQuizzes() {
 		return quizzes;
 	}
+
 	public void setQuizzes(List<Quiz> quizzes) {
 		this.quizzes = quizzes;
 	}
@@ -116,6 +130,7 @@ public class Usuario {
 	public List<Pontuacao> getPontos() {
 		return pontos;
 	}
+
 	public void setPontos(List<Pontuacao> pontos) {
 		this.pontos = pontos;
 	}
@@ -123,6 +138,7 @@ public class Usuario {
 	public List<Material> getMateriais() {
 		return materiais;
 	}
+
 	public void setMateriais(List<Material> materiais) {
 		this.materiais = materiais;
 	}

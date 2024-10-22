@@ -22,6 +22,7 @@ public class Questao {
 	private Integer id;
 	@Column(name= "descricao", length = 300)
 	private String desc;
+	private String explicacao;
 	//-
 	
 	@ManyToOne
@@ -73,6 +74,14 @@ public class Questao {
 	public void setQuiz(Quiz quiz) {
 		this.quiz = quiz;
 	}
+	public String getExplicacao() {
+		return explicacao;
+	}
+	public void setExplicacao(String explicacao) {
+		this.explicacao = explicacao;
+	}
+	
+	
 	//-
 
 	

@@ -62,7 +62,7 @@ public class CrudAlternativa {
 			qu.setQuiz(null);
 
 			a.setQuestao(qu);
-			a.setRespostas(null);
+	//		a.setRespostas(null);
 
 			return ResponseEntity.ok(a);
 		}
@@ -90,7 +90,7 @@ public class CrudAlternativa {
 				qu.setQuiz(null);
 
 				aAtualizada.setQuestao(qu);
-				aAtualizada.setRespostas(null);
+	//			aAtualizada.setRespostas(null);
 
 				aAtualizada.setQuestao(qu);
 
@@ -132,7 +132,7 @@ public class CrudAlternativa {
 			}
 
 			a.setQuestao(null);
-			a.setRespostas(null);
+	//		a.setRespostas(null);
 
 		}
 

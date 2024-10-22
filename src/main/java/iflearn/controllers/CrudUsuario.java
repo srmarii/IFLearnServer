@@ -31,11 +31,11 @@ public class CrudUsuario {
 	@ResponseBody
 	// pra que serve o "?"
 	public ResponseEntity<?> create(@RequestBody Usuario u) {
-		if (u.getNome() == null || u.getEmail() == null || u.getSenha() == null || u.getCategoria() == null
-				|| u.getTurma() == null) {
+		if (u.getNome() == null || u.getSobrenome() == null || u.getEmail() == null || u.getSenha() == null
+				|| u.getCategoria() == null || u.getTurma() == null) {
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
-		if(ur.existsByEmail(u.getEmail()) == true) {
+		if (ur.existsByEmail(u.getEmail()) == true) {
 			return ResponseEntity.badRequest().body("email já existe no banco");
 		}
 
@@ -46,7 +46,6 @@ public class CrudUsuario {
 		return ResponseEntity.ok(uNovo);
 	}
 
-	
 	@GetMapping("/read/{id_usuario}")
 	@ResponseBody
 	public ResponseEntity<?> read(@PathVariable(name = "id_usuario") Integer id) {
@@ -61,10 +60,10 @@ public class CrudUsuario {
 
 		else {
 			Usuario u = uExistente.get();
-			
-			//não deveria setar os atributos de cada objeto/lista, 
-			//não o objeto/lista inteira?? pq dai se eu quiser ver 
-			//quais quizzes/materiais/pontos o usuario possui eu não conseguiria
+
+			// não deveria setar os atributos de cada objeto/lista,
+			// não o objeto/lista inteira?? pq dai se eu quiser ver
+			// quais quizzes/materiais/pontos o usuario possui eu não conseguiria
 			u.setQuizzes(null);
 			u.setMateriais(null);
 			u.setPontos(null);
@@ -77,35 +76,33 @@ public class CrudUsuario {
 	@PutMapping("/update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody Usuario u) {
-		if (u.getId() == null || u.getNome() == null || u.getEmail() == null || u.getSenha() == null
-				|| u.getTurma() == null) {
+		if (u.getId() == null || u.getNome() == null || u.getSobrenome() == null || u.getEmail() == null
+				|| u.getSenha() == null || u.getTurma() == null)
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
-		}
+		
 
 		Optional<Usuario> uExistente = ur.findById(u.getId());
 		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
 
-		else {
-			try {
-				//deixar atualizar pro mesmo email
-				if (u.getEmail().equals(uExistente.get().getEmail()) 
-						|| ur.existsByEmail(u.getEmail()) == false ) {
+		String senhaVelha = "";
 
-					u.setQuizzes(null);
-					u.setMateriais(null);
-					u.setPontos(null);
+		if (senhaVelha.equals(uExistente.get().getSenha())) {
 
-					Usuario uAtualizado = ur.save(u);
+			// deixar atualizar pro mesmo email
+			if (u.getEmail().equals(uExistente.get().getEmail()) || ur.existsByEmail(u.getEmail()) == false) {
 
-					return ResponseEntity.ok(uAtualizado);
-				}
-					return ResponseEntity.badRequest().body("o email já existe no banco");
-				
-			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
+				u.setQuizzes(null);
+				u.setMateriais(null);
+				u.setPontos(null);
+
+				Usuario uAtualizado = ur.save(u);
+
+				return ResponseEntity.ok(uAtualizado);
 			}
+			return ResponseEntity.badRequest().body("o email já existe no banco");
 		}
+		return ResponseEntity.badRequest().body("a senha antiga não confere");
 	}
 
 	@DeleteMapping("/delete/{id_usuario}")
@@ -200,7 +197,7 @@ public class CrudUsuario {
 		uExistente.get().setQuizzes(null);
 		uExistente.get().setMateriais(null);
 		uExistente.get().setPontos(null);
-		
+
 		return ResponseEntity.ok(uAtualizado);
 	}
 
