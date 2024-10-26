@@ -18,11 +18,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	
 	Usuario findByEmailAndSenha(String email, String senha);
 	
-	Boolean existsByNome(String nome);	
+//	Boolean existsByNome(String nome);	
 	Boolean existsByEmail(String email);
-	Boolean existsBySenha(String senha); 
-	Boolean existsByCategoria(String categoria);
-	Boolean existsByTurma(String turma);
+//	Boolean existsBySenha(String senha); 
+//	Boolean existsByCategoria(String categoria);
 	
 	
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.dto.UsuarioUpdateDTO;
 import iflearn.entities.Usuario;
 import iflearn.repositories.UsuarioRepository;
 
@@ -32,11 +33,11 @@ public class CrudUsuario {
 	// pra que serve o "?"
 	public ResponseEntity<?> create(@RequestBody Usuario u) {
 		if (u.getNome() == null || u.getSobrenome() == null || u.getEmail() == null || u.getSenha() == null
-				|| u.getCategoria() == null || u.getTurma() == null) {
+				|| u.getCategoria() == null) { // || u.getTurma() == null) {
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 		if (ur.existsByEmail(u.getEmail()) == true) {
-			return ResponseEntity.badRequest().body("email já existe no banco");
+			return ResponseEntity.badRequest().body("email já cadastrado");
 		}
 
 		u.setUsuarioNovo(true);
@@ -75,32 +76,54 @@ public class CrudUsuario {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody Usuario u) {
-		if (u.getId() == null || u.getNome() == null || u.getSobrenome() == null || u.getEmail() == null
-				|| u.getSenha() == null || u.getTurma() == null)
+	public ResponseEntity<?> update(@RequestBody UsuarioUpdateDTO udto) {
+		if (udto.id() == null || udto.nome() == null || udto.sobrenome() == null || udto.email() == null
+				|| udto.categoria() == null) {
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
-		
-
-		Optional<Usuario> uExistente = ur.findById(u.getId());
+		}
+		Optional<Usuario> uExistente = ur.findById(udto.id());
 		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
 
-		String senhaVelha = "";
+		//senha velha E senha atualizada forem nulas ao mesmo tempo OU que cada uma seja nula individualmente
+		if (udto.senhaVelha() == null && udto.senhaAtualizada() == null || udto.senhaVelha() == null
+				|| udto.senhaAtualizada() == null) {
+			Usuario u = new Usuario();
+			u.setId(udto.id());
+			u.setNome(udto.nome());
+			u.setSobrenome(udto.sobrenome());
+			u.setEmail(udto.email());
+			u.setCategoria(udto.categoria());
+			//setar a senha com a senha já existente no banco
+			u.setSenha(uExistente.get().getSenha());
 
-		if (senhaVelha.equals(uExistente.get().getSenha())) {
+			Usuario uAtualizado = ur.save(u);
 
-			// deixar atualizar pro mesmo email
-			if (u.getEmail().equals(uExistente.get().getEmail()) || ur.existsByEmail(u.getEmail()) == false) {
+			u.setQuizzes(null);
+			u.setMateriais(null);
+			u.setPontos(null);
 
-				u.setQuizzes(null);
-				u.setMateriais(null);
-				u.setPontos(null);
+			return ResponseEntity.ok(uAtualizado);
 
-				Usuario uAtualizado = ur.save(u);
+		}
+		//se senha velha e senh nova NÃO forem nulas e então, a senha velha conferir com a que já existe no banco
+		if (udto.senhaVelha().equals(uExistente.get().getSenha()) && udto.senhaAtualizada() != null) {
 
-				return ResponseEntity.ok(uAtualizado);
-			}
-			return ResponseEntity.badRequest().body("o email já existe no banco");
+			Usuario u = new Usuario();
+			u.setId(udto.id());
+			u.setNome(udto.nome());
+			u.setSobrenome(udto.sobrenome());
+			u.setEmail(udto.email());
+			u.setCategoria(udto.categoria());
+			u.setSenha(udto.senhaAtualizada());
+
+			Usuario uAtualizado = ur.save(u);
+
+			u.setQuizzes(null);
+			u.setMateriais(null);
+			u.setPontos(null);
+
+			return ResponseEntity.ok(uAtualizado);
 		}
 		return ResponseEntity.badRequest().body("a senha antiga não confere");
 	}

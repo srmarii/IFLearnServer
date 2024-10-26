@@ -21,8 +21,8 @@ public class Usuario {
 	private String sobrenome;
 	private String email;
 	private String senha;
-	private String categoria;
-	private String turma;
+	private Integer categoria;
+//	private String turma;
 	private Boolean usuarioNovo;
 	// -
 
@@ -40,15 +40,15 @@ public class Usuario {
 		super();
 	}
 
-	public Usuario(Integer id, String nome, String sobrenome, String email, String senha, String categoria,
-			String turma, boolean usuarioNovo) {
+	public Usuario(Integer id, String nome, String sobrenome, String email, String senha, Integer categoria,
+			boolean usuarioNovo) { // String turma) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.categoria = categoria;
-		this.turma = turma;
+		// this.turma = turma;
 		this.usuarioNovo = usuarioNovo;
 	}
 
@@ -70,7 +70,7 @@ public class Usuario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public String getSobrenome() {
 		return sobrenome;
 	}
@@ -95,21 +95,21 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public String getCategoria() {
+	public Integer getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(String categoria) {
+	public void setCategoria(Integer categoria) {
 		this.categoria = categoria;
 	}
 
-	public String getTurma() {
-		return turma;
-	}
-
-	public void setTurma(String turma) {
-		this.turma = turma;
-	}
+//	public String getTurma() {
+//		return turma;
+//	}
+//
+//	public void setTurma(String turma) {
+//		this.turma = turma;
+//	}
 
 	public Boolean getUsuarioNovo() {
 		return usuarioNovo;
