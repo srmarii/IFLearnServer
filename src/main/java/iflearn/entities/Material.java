@@ -1,5 +1,7 @@
 package iflearn.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +20,7 @@ public class Material {
 	private String nome;
 	@Column(length = 2)
 	private String turma;
-	private Integer data;
-
+	private LocalDateTime dataCriacao = LocalDateTime.now();
 	//-
 	
 	@ManyToOne
@@ -35,7 +36,6 @@ public class Material {
 		super();
 		this.id = id;
 		this.turma = turma;
-		this.data = data;
 	}
 	//-
 	
@@ -62,13 +62,6 @@ public class Material {
 		this.turma = turma;
 	}
 	
-	public Integer getData() {
-		return data;
-	}
-	public void setData(Integer data) {
-		this.data = data;
-	}
-	
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -76,7 +69,12 @@ public class Material {
 		this.usuario = usuario;
 	}
 	
-	
+	public LocalDateTime getDataCriacao() {
+		return dataCriacao;
+	}
+	public void setDataCriacao(LocalDateTime dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}	
 	//-
 	
 }

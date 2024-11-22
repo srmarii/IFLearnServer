@@ -22,6 +22,7 @@ public class Usuario {
 	private String senha;
 	private Integer categoria;
 	private Boolean usuarioNovo;
+	private int somaPontos;
 	// -
 
 	@OneToMany(mappedBy = "usuario")
@@ -48,8 +49,8 @@ public class Usuario {
 		this.categoria = categoria;
 		this.usuarioNovo = usuarioNovo;
 	}
-
 	// -
+
 
 	// getters and setters
 	public Integer getId() {
@@ -106,6 +107,13 @@ public class Usuario {
 
 	public void setUsuarioNovo(Boolean usuarioNovo) {
 		this.usuarioNovo = usuarioNovo;
+	}
+	
+	public int getSomaPontos() {
+		return somaPontos;
+	}
+	public void setSomaPontos(int somaPontos) {
+		this.somaPontos = somaPontos;
 	}
 
 	public List<Quiz> getQuizzes() {

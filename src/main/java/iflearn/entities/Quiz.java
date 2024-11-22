@@ -1,5 +1,6 @@
 package iflearn.entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class Quiz {
 	private String nome;
 	@Column(name= "descricao", length = 300)
 	private String desc;
+	private LocalDateTime dataCriacao = LocalDateTime.now();
 	
 	//!!!!!!!!!!!!!!!!!!nota
 	
@@ -97,6 +99,13 @@ public class Quiz {
 //	public void setNota(Double nota) {
 //		this.nota = nota;
 //	}
+	
+	public LocalDateTime getDataCriacao() {
+		return dataCriacao;
+	}
+	public void setDataCriacao(LocalDateTime dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
 	
 	public Usuario getUsuario() {
 		return usuario;

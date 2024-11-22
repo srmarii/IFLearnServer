@@ -64,8 +64,8 @@ public class QuizController {
 
 	@PostMapping("/calculaPontosU/{id_usuario}")
 	@ResponseBody
-	public ResponseEntity<?> calculaPontosTotalPorU(@PathVariable(name = "id_usuario") Integer id) {
-		return qis.calculaPontosTotalPorU(id);
+	public ResponseEntity<?> calculaPontosU(@PathVariable(name = "id_usuario") Integer id) {
+		return qis.calculaPontosU(id);
 	}
 
 	@GetMapping("/ranking")

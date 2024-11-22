@@ -137,10 +137,11 @@ public class QuizService {
 			Alternativa aBanco = ar.findById(selecionadaU.getId()).get();
 			if (aBanco.getCorreta())
 				contador++;
-		}
+		}		
 		Pontuacao p = new Pontuacao();
 		p.setQtdPontos(contador);
 		p.setQuiz(qi);
+		p.setUsuario(qi.getUsuario());
 		Pontuacao pNova = pr.save(p);
 
 		return ResponseEntity.ok(pNova);
@@ -148,7 +149,7 @@ public class QuizService {
 
 	
 	//calcula a pontuação total de um usuario (soma todos pontos de todos quizzes realizados)
-	public ResponseEntity<?> calculaPontosTotalPorU(Integer id) {
+	public ResponseEntity<?> calculaPontosU(Integer id) {
 		if (id == null)
 			return ResponseEntity.badRequest().body("o id está nulo");
 		Optional<Usuario> uExistente = ur.findById(id);
@@ -161,6 +162,9 @@ public class QuizService {
 		}
 		RankingDTO retorno = new RankingDTO(uExistente.get().getId(), uExistente.get().getNome(), soma);
 
+		Usuario u = new Usuario();
+		u.setSomaPontos(soma);
+		
 		return ResponseEntity.ok(retorno);
 	}
 
