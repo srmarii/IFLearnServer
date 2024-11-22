@@ -25,9 +25,7 @@ public class Pontuacao {
 	@ManyToOne
 	@JoinColumn(name= "id_usuario")
 	private Usuario usuario;
-	
-//	@OneToMany(mappedBy = "pontuacao")
-//	private List<Resposta> respostas = new ArrayList<>();
+
 	
 	//construtores
 	public Pontuacao() {

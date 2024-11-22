@@ -1,10 +1,7 @@
 package iflearn.entities;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.crypto.Data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,15 +23,9 @@ public class Quiz {
 	private String nome;
 	@Column(name= "descricao", length = 300)
 	private String desc;
-
-	//pensar na lógica disso
-	//private String feedback;
 	
-	//transformar o tipo pra data!
-	//private Data dataCriacao;
+	//!!!!!!!!!!!!!!!!!!nota
 	
-//	@Column
-//	private Double nota;
 	//-
 	
 	@ManyToOne

@@ -3,7 +3,6 @@ package iflearn.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +21,6 @@ public class Usuario {
 	private String email;
 	private String senha;
 	private Integer categoria;
-//	private String turma;
 	private Boolean usuarioNovo;
 	// -
 
@@ -41,14 +39,13 @@ public class Usuario {
 	}
 
 	public Usuario(Integer id, String nome, String sobrenome, String email, String senha, Integer categoria,
-			boolean usuarioNovo) { // String turma) {
+			boolean usuarioNovo) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.categoria = categoria;
-		// this.turma = turma;
 		this.usuarioNovo = usuarioNovo;
 	}
 
@@ -102,14 +99,6 @@ public class Usuario {
 	public void setCategoria(Integer categoria) {
 		this.categoria = categoria;
 	}
-
-//	public String getTurma() {
-//		return turma;
-//	}
-//
-//	public void setTurma(String turma) {
-//		this.turma = turma;
-//	}
 
 	public Boolean getUsuarioNovo() {
 		return usuarioNovo;
