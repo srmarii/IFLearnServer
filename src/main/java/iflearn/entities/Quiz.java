@@ -24,10 +24,7 @@ public class Quiz {
 	private String nome;
 	@Column(name= "descricao", length = 300)
 	private String desc;
-	private LocalDateTime dataCriacao = LocalDateTime.now();
-	
-	//!!!!!!!!!!!!!!!!!!nota
-	
+	private LocalDateTime dataCriacao = LocalDateTime.now();	
 	//-
 	
 	@ManyToOne

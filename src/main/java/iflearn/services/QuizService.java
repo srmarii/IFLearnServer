@@ -139,6 +139,7 @@ public class QuizService {
 				contador++;
 		}		
 		Pontuacao p = new Pontuacao();
+//		qi.getPontos().add(contador);
 		p.setQtdPontos(contador);
 		p.setQuiz(qi);
 		p.setUsuario(qi.getUsuario());

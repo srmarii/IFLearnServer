@@ -22,7 +22,7 @@ public class MaterialService {
 
 	
 	public ResponseEntity<?> create(Material m) {
-		if (m.getNome() == null || m.getTurma() == null || m.getUsuario() == null) {
+		if (m.getNome() == null || m.getUsuario() == null) {
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 		Material mNovo = mr.save(m);
@@ -53,7 +53,7 @@ public class MaterialService {
 	
 	
 	public ResponseEntity<?> update(Material m) {
-		if (m.getId() == null || m.getNome() == null || m.getTurma() == null || m.getUsuario() == null) {
+		if (m.getId() == null || m.getNome() == null || m.getUsuario() == null) {
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 		Optional<Material> mExistente = mr.findById(m.getId());

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.entities.Pontuacao;
 import iflearn.entities.Quiz;
 import iflearn.services.QuizService;
 
@@ -72,6 +73,14 @@ public class QuizController {
 	@ResponseBody
 	public ResponseEntity<?> ranking() {
 		return qis.ranking();
+	}
+	
+	@GetMapping("/teste")
+	@ResponseBody
+	public List<Pontuacao> teste() {
+		Quiz qi = new Quiz();
+		List<Pontuacao> a = qi.getPontos();
+		return a;
 	}
 
 }
