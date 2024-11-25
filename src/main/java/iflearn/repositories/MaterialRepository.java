@@ -12,6 +12,4 @@ public interface MaterialRepository extends JpaRepository<Material, Integer>{
 	List<Material> findAll();
 	
 	Boolean existsByNome(String nome);	
-	Boolean existsByTurma(String turma);
-
 }

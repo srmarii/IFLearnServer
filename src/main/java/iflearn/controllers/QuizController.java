@@ -63,7 +63,7 @@ public class QuizController {
 		return qis.calculaPontosQi(qi);
 	}
 
-	@PostMapping("/calculaPontosU/{id_usuario}")
+	@GetMapping("/calculaPontosU/{id_usuario}")
 	@ResponseBody
 	public ResponseEntity<?> calculaPontosU(@PathVariable(name = "id_usuario") Integer id) {
 		return qis.calculaPontosU(id);
@@ -74,13 +74,21 @@ public class QuizController {
 	public ResponseEntity<?> ranking() {
 		return qis.ranking();
 	}
-	
+
 	@GetMapping("/teste")
 	@ResponseBody
 	public List<Pontuacao> teste() {
 		Quiz qi = new Quiz();
 		List<Pontuacao> a = qi.getPontos();
 		return a;
+	}
+
+	@GetMapping("/realizouQuiz/{id_quiz}/{id_usuario}")
+	@ResponseBody
+	public boolean realizouQuiz(@PathVariable(name = "id_quiz") Integer idqi,
+			@PathVariable(name = "id_usuario") Integer idu) {
+		return qis.realizouQuiz(idqi, idu);
+
 	}
 
 }

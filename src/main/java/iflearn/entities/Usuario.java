@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,13 +26,13 @@ public class Usuario {
 	private int somaPontos;
 	// -
 
-	@OneToMany(mappedBy = "usuario")
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
 	private List<Quiz> quizzes = new ArrayList<>();
 
-	@OneToMany(mappedBy = "usuario")
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
 	private List<Pontuacao> pontos = new ArrayList<>();
 
-	@OneToMany(mappedBy = "usuario")
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
 	private List<Material> materiais = new ArrayList<>();
 
 	// construtores
