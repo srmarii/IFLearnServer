@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import iflearn.dto.UsuarioUpdateDTO;
+import iflearn.dto.UpdateUsuarioRequest;
+import iflearn.dto.UsuarioResponse;
 import iflearn.entities.Usuario;
 import iflearn.services.UsuarioService;
 
@@ -39,7 +40,7 @@ public class UsuarioController {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody UsuarioUpdateDTO udto) {
+	public ResponseEntity<?> update(@RequestBody UpdateUsuarioRequest udto) {
 		return us.update(udto);
 	}
 
@@ -51,7 +52,7 @@ public class UsuarioController {
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
-	public ResponseEntity<List<Usuario>> listarTodos() {
+	public ResponseEntity<List<UsuarioResponse>> listarTodos() {
 		return us.listarTodos();
 	}
 

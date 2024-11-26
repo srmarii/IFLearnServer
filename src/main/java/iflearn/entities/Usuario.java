@@ -41,7 +41,7 @@ public class Usuario {
 	}
 
 	public Usuario(Integer id, String nome, String sobrenome, String email, String senha, Integer categoria,
-			boolean usuarioNovo) {
+			Boolean usuarioNovo, int somaPontos) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -49,6 +49,7 @@ public class Usuario {
 		this.senha = senha;
 		this.categoria = categoria;
 		this.usuarioNovo = usuarioNovo;
+		this.somaPontos = somaPontos;
 	}
 	// -
 

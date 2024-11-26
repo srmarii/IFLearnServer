@@ -5,12 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import iflearn.dto.RankingDTO;
+import iflearn.dto.RankingRequest;
+import iflearn.dto.QuizResponse;
 import iflearn.entities.Alternativa;
 import iflearn.entities.Pontuacao;
 import iflearn.entities.Questao;
@@ -45,6 +47,29 @@ public class QuizService {
 		return ResponseEntity.ok(qiNovo);
 	}
 
+//	public ResponseEntity<?> read(Integer id) {
+//		if (id == null) {
+//			return ResponseEntity.badRequest().body("o id está nulo");
+//		}
+//		Optional<Quiz> qiExistente = qir.findById(id);
+//		if (qiExistente.isEmpty())
+//			return ResponseEntity.notFound().build();
+//		else {
+//			Quiz qi = qiExistente.get();
+//			Usuario u = qi.getUsuario();
+//			u.setQuizzes(null);
+//			u.setMateriais(null);
+//			u.setPontos(null);
+//			// qi.setUsuario(u);
+//			// qi.setPontos(null);
+//			// qi.setQuestoes(null);
+//			qi.setUsuario(u);
+//
+//			return ResponseEntity.ok(qi);
+//		}
+//	}
+	
+	
 	public ResponseEntity<?> read(Integer id) {
 		if (id == null) {
 			return ResponseEntity.badRequest().body("o id está nulo");
@@ -55,15 +80,15 @@ public class QuizService {
 		else {
 			Quiz qi = qiExistente.get();
 			Usuario u = qi.getUsuario();
-			u.setQuizzes(null);
-			u.setMateriais(null);
-			u.setPontos(null);
-			// qi.setUsuario(u);
-			// qi.setPontos(null);
-			// qi.setQuestoes(null);
-			qi.setUsuario(u);
+//			u.setQuizzes(null);
+//			u.setMateriais(null);
+//			u.setPontos(null);
+//			qi.setUsuario(u);
+//			qi.setPontos(null);
+//			qi.setQuestoes(null);
+//			qi.setUsuario(u);
 
-			return ResponseEntity.ok(qi);
+			return ResponseEntity.ok(new QuizResponse(qi));
 		}
 	}
 
@@ -78,15 +103,15 @@ public class QuizService {
 			try {
 				Usuario u = ur.findById(qi.getUsuario().getId()).get();
 				Quiz qiAtualizado = qir.save(qi);
-				u.setQuizzes(null);
-				u.setMateriais(null);
-				u.setPontos(null);
-				qiAtualizado.setUsuario(u);
-				qiAtualizado.setPontos(null);
-				qiAtualizado.setQuestoes(null);
-				qiAtualizado.setUsuario(u);
+//				u.setQuizzes(null);
+//				u.setMateriais(null);
+//				u.setPontos(null);
+//				qiAtualizado.setUsuario(u);
+//				qiAtualizado.setPontos(null);
+//				qiAtualizado.setQuestoes(null);
+//				qiAtualizado.setUsuario(u);
 
-				return ResponseEntity.ok(qiAtualizado);
+				return ResponseEntity.ok(new QuizResponse(qiAtualizado));
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().build();
 			}
@@ -106,19 +131,26 @@ public class QuizService {
 		}
 	}
 
-	public ResponseEntity<List<Quiz>> listarTodos() {
+	public ResponseEntity<List<QuizResponse>> listarTodos() {
 		List<Quiz> lista = qir.findAll();
 		for (Quiz qi : lista) {
-			if (qi.getUsuario() != null) {
-				Usuario u = qi.getUsuario();
-				u.setQuizzes(null);
-				u.setMateriais(null);
-				u.setPontos(null);
-			}
-			qi.setPontos(null);
-			qi.setQuestoes(null);
+//			if (qi.getUsuario() != null) {
+//				Usuario u = qi.getUsuario();
+//				u.setQuizzes(null);
+//				u.setMateriais(null);
+//				u.setPontos(null);
+//			}
+//			qi.setPontos(null);
+//			qi.setQuestoes(null);
 		}
-		return ResponseEntity.ok(lista);
+		//return ResponseEntity.ok(new QuizResponse(lista));
+		
+		// . strem() divide a lista para cada objeto
+		return ResponseEntity.ok(lista.stream()
+				// .map() entra em cada objeto que foi separado e r criando um QuizResponse para cada um (pq é nessa estrutura jgui não sabe
+                .map(QuizResponse::new)
+                // .collect() transforma de volta em uma lista
+                .collect(Collectors.toList()));
 	}
 
 	//////////////////////////////////////////////////////
@@ -160,10 +192,16 @@ public class QuizService {
 		for (Pontuacao n : uExistente.get().getPontos()) {
 			soma += n.getQtdPontos();
 		}
-		RankingDTO retorno = new RankingDTO(uExistente.get().getId(), uExistente.get().getNome(), soma);
+		RankingRequest retorno = new RankingRequest(uExistente.get().getId(), uExistente.get().getNome(), soma);
 
-		Usuario u = new Usuario();
+		Usuario u = uExistente.get();
 		u.setSomaPontos(soma);
+		ur.save(u);
+		
+//		int pontoAtual = uExistente.getSomaPontos();
+//		uExistente.setSomaPontos(pontoatual + soma);
+//
+//		ur.save(uExistente);
 
 		return ResponseEntity.ok(retorno);
 	}
@@ -171,7 +209,7 @@ public class QuizService {
 	// ordena a soma total de pontos de cada usuario em ordem descrecente
 	// e retorna id, nome e a soma total de cada usuario
 	public ResponseEntity<?> ranking() {
-		List<RankingDTO> somasDeCadaU = new ArrayList<>();
+		List<RankingRequest> somasDeCadaU = new ArrayList<>();
 		List<Usuario> lista = ur.findAll();
 		for (Usuario u : lista) {
 			u.setMateriais(null);
@@ -180,11 +218,11 @@ public class QuizService {
 			for (Pontuacao n : u.getPontos()) {
 				soma += n.getQtdPontos();
 			}
-			somasDeCadaU.add(new RankingDTO(u.getId(), u.getNome(), soma));
+			somasDeCadaU.add(new RankingRequest(u.getId(), u.getNome(), soma));
 		}
 		// ordena os valores (em ordem crescente)
-		Collections.sort(somasDeCadaU, new Comparator<RankingDTO>() {
-			public int compare(RankingDTO r1, RankingDTO r2) {
+		Collections.sort(somasDeCadaU, new Comparator<RankingRequest>() {
+			public int compare(RankingRequest r1, RankingRequest r2) {
 				return r1.soma().compareTo(r2.soma());
 			}
 		});

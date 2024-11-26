@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.dto.QuizResponse;
 import iflearn.entities.Pontuacao;
 import iflearn.entities.Quiz;
 import iflearn.services.QuizService;
@@ -51,7 +52,7 @@ public class QuizController {
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
-	public ResponseEntity<List<Quiz>> listarTodos() {
+	public ResponseEntity<List<QuizResponse>> listarTodos() {
 		return qis.listarTodos();
 	}
 

@@ -2,12 +2,15 @@ package iflearn.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import iflearn.dto.UsuarioUpdateDTO;
+import iflearn.dto.QuizResponse;
+import iflearn.dto.UpdateUsuarioRequest;
+import iflearn.dto.UsuarioResponse;
 import iflearn.entities.Usuario;
 import iflearn.repositories.UsuarioRepository;
 
@@ -42,18 +45,18 @@ public class UsuarioService {
 			return ResponseEntity.notFound().build();
 		} else {
 			Usuario u = uExistente.get();
-			u.setQuizzes(null);
-			u.setMateriais(null);
-			u.setPontos(null);
+//			u.setQuizzes(null);
+//			u.setMateriais(null);
+//			u.setPontos(null);
 
-			return ResponseEntity.ok(u);
+			return ResponseEntity.ok(new UsuarioResponse(u));
 		}
 	}
 
 	
-	public ResponseEntity<?> update(UsuarioUpdateDTO udto) {
+	public ResponseEntity<?> update(UpdateUsuarioRequest udto) {
 		if (udto.id() == null || udto.nome() == null || udto.sobrenome() == null || udto.email() == null
-				|| udto.categoria() == null) {
+				|| udto.categoria() == null || udto.somaPontos() == null || udto.usuarioNovo() == null) {
 			return ResponseEntity.badRequest().body("um dos parâmetros está nulo");
 		}
 		Optional<Usuario> uExistente = ur.findById(udto.id());
@@ -72,14 +75,16 @@ public class UsuarioService {
 			u.setCategoria(udto.categoria());
 			// setar a senha com a senha já existente no banco
 			u.setSenha(uExistente.get().getSenha());
-
+			u.setSomaPontos(udto.somaPontos());
+			u.setUsuarioNovo(udto.usuarioNovo());
+			
 			Usuario uAtualizado = ur.save(u);
 
-			u.setQuizzes(null);
-			u.setMateriais(null);
-			u.setPontos(null);
+//			u.setQuizzes(null);
+//			u.setMateriais(null);
+//			u.setPontos(null);
 
-			return ResponseEntity.ok(uAtualizado);
+			return ResponseEntity.ok(new UsuarioResponse(uAtualizado));
 		}
 		// se senha velha e senh nova NÃO forem nulas e então, a senha velha conferir
 		// com a que já existe no banco
@@ -91,14 +96,16 @@ public class UsuarioService {
 			u.setEmail(udto.email());
 			u.setCategoria(udto.categoria());
 			u.setSenha(udto.senhaAtualizada());
-
+			u.setSomaPontos(udto.somaPontos());
+			u.setUsuarioNovo(udto.usuarioNovo());
+			
 			Usuario uAtualizado = ur.save(u);
 
-			u.setQuizzes(null);
-			u.setMateriais(null);
-			u.setPontos(null);
+//			u.setQuizzes(null);
+//			u.setMateriais(null);
+//			u.setPontos(null);
 
-			return ResponseEntity.ok(uAtualizado);
+			return ResponseEntity.ok(new UsuarioResponse(uAtualizado));
 		}
 		return ResponseEntity.badRequest().body("a senha antiga não confere");
 	}
@@ -118,14 +125,17 @@ public class UsuarioService {
 	}
 
 	
-	public ResponseEntity<List<Usuario>> listarTodos() {
+	public ResponseEntity<List<UsuarioResponse>> listarTodos() {
 		List<Usuario> lista = ur.findAll();
 		for (Usuario u : lista) {
-			u.setMateriais(null);
-			u.setQuizzes(null);
-			u.setPontos(null);
+//			u.setMateriais(null);
+//			u.setQuizzes(null);
+//			u.setPontos(null);
 		}
-		return ResponseEntity.ok(lista);
+//		return ResponseEntity.ok(lista);
+				return ResponseEntity.ok(lista.stream()
+						.map(UsuarioResponse::new)
+						.collect(Collectors.toList()));
 	}
 
 	
@@ -139,9 +149,9 @@ public class UsuarioService {
 		}
 		// "limpa" o JSON de retorno - isto é, retorna apenas as informacoes necessarias
 		// neste momento...
-		uExistente.setQuizzes(null);
-		uExistente.setMateriais(null);
-		uExistente.setPontos(null);
+//		uExistente.setQuizzes(null);
+//		uExistente.setMateriais(null);
+//		uExistente.setPontos(null);
 
 		return ResponseEntity.ok(uExistente);
 	}
