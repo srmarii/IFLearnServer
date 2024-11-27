@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.dto.MaterialResponse;
 import iflearn.entities.Material;
 import iflearn.services.MaterialService;
 
@@ -50,7 +51,7 @@ public class MaterialController {
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
-	public ResponseEntity<List<Material>> listarTodos() {
+	public ResponseEntity<List<MaterialResponse>> listarTodos() {
 		return ms.listarTodos();
 	}
 

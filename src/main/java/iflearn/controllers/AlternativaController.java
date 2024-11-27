@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.dto.AlternativaResponse;
 import iflearn.entities.Alternativa;
 import iflearn.services.AlternativaService;
 
@@ -50,7 +51,7 @@ public class AlternativaController {
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
-	public ResponseEntity<List<Alternativa>> listarTodos() {
+	public ResponseEntity<List<AlternativaResponse>> listarTodos() {
 		return as.listarTodos();
 	}
 

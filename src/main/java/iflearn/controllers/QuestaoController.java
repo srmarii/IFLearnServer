@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import iflearn.dto.QuestaoResponse;
 import iflearn.entities.Questao;
 import iflearn.services.QuestaoService;
 
@@ -50,7 +51,7 @@ public class QuestaoController {
 
 	@GetMapping("/listarTodos")
 	@ResponseBody
-	public ResponseEntity<List<Questao>> listarTodos() {
+	public ResponseEntity<List<QuestaoResponse>> listarTodos() {
 		return qus.listarTodos();
 	}
 

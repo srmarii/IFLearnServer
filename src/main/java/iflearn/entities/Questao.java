@@ -38,10 +38,12 @@ public class Questao {
 	public Questao() {
 		super();
 	}
-	public Questao(Integer id, String desc) {
+	public Questao(Integer id, String desc, String explicacao, Quiz quiz) {
 		super();
 		this.id = id;
 		this.desc = desc;
+		this.explicacao=explicacao;
+		this.quiz=quiz;
 	}
 	//-
 	

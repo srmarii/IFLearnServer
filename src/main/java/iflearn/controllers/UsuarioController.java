@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import iflearn.dto.UpdateUsuarioRequest;
+import iflearn.dto.UsuarioRequest;
 import iflearn.dto.UsuarioResponse;
 import iflearn.entities.Usuario;
 import iflearn.services.UsuarioService;
@@ -40,7 +40,7 @@ public class UsuarioController {
 
 	@PutMapping("/update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody UpdateUsuarioRequest udto) {
+	public ResponseEntity<?> update(@RequestBody UsuarioRequest udto) {
 		return us.update(udto);
 	}
 
@@ -62,10 +62,10 @@ public class UsuarioController {
 		return us.login(u);
 	}
 
-	@PostMapping("/trocaDeSenha")
+	@PostMapping("/trocaDeSenhaProfessor")
 	@ResponseBody
-	public ResponseEntity<?> trocaDeSenha(@RequestBody Usuario u) {
-		return us.trocaDeSenha(u);
+	public ResponseEntity<?> trocaDeSenhaProfessor(@RequestBody Usuario u) {
+		return us.trocaDeSenhaProfessor(u);
 	}
 
 }
