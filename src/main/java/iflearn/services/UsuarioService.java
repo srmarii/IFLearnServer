@@ -54,20 +54,21 @@ public class UsuarioService {
 		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
 
+		Usuario u = new Usuario();
+		u.setId(udto.id());
+		u.setNome(udto.nome());
+		u.setSobrenome(udto.sobrenome());
+		u.setEmail(udto.email());
+		u.setCategoria(udto.categoria());
+		u.setSomaPontos(udto.somaPontos());
+		u.setUsuarioNovo(udto.usuarioNovo());
+		
 		// senha velha E senha atualizada forem nulas ao mesmo tempo OU que cada uma
 		// seja nula individualmente
 		if (udto.senhaVelha() == null && udto.senhaAtualizada() == null || udto.senhaVelha() == null
 				|| udto.senhaAtualizada() == null) {
-			Usuario u = new Usuario();
-			u.setId(udto.id());
-			u.setNome(udto.nome());
-			u.setSobrenome(udto.sobrenome());
-			u.setEmail(udto.email());
-			u.setCategoria(udto.categoria());
 			// setar a senha com a senha já existente no banco
 			u.setSenha(uExistente.get().getSenha());
-			u.setSomaPontos(udto.somaPontos());
-			u.setUsuarioNovo(udto.usuarioNovo());
 
 			Usuario uAtualizado = ur.save(u);
 			return ResponseEntity.ok(new UsuarioResponse(uAtualizado));
@@ -76,15 +77,7 @@ public class UsuarioService {
 		// se senha velha e senh nova NÃO forem nulas e então, a senha velha conferir
 		// com a que já existe no banco
 		if (udto.senhaVelha().equals(uExistente.get().getSenha()) && udto.senhaAtualizada() != null) {
-			Usuario u = new Usuario();
-			u.setId(udto.id());
-			u.setNome(udto.nome());
-			u.setSobrenome(udto.sobrenome());
-			u.setEmail(udto.email());
-			u.setCategoria(udto.categoria());
 			u.setSenha(udto.senhaAtualizada());
-			u.setSomaPontos(udto.somaPontos());
-			u.setUsuarioNovo(udto.usuarioNovo());
 
 			Usuario uAtualizado = ur.save(u);
 			return ResponseEntity.ok(new UsuarioResponse(uAtualizado));
@@ -153,9 +146,9 @@ public class UsuarioService {
 
 		// salva e retorna atualizado
 		Usuario uAtualizado = ur.save(uExistente.get());
-		uExistente.get().setQuizzes(null);
-		uExistente.get().setMateriais(null);
-		uExistente.get().setPontos(null);
+//		uExistente.get().setQuizzes(null);
+//		uExistente.get().setMateriais(null);
+//		uExistente.get().setPontos(null);
 
 		return ResponseEntity.ok(new UsuarioResponse(uAtualizado));
 	}

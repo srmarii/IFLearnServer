@@ -17,6 +17,7 @@ public class Material {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
+	private String nomeArquivo;
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	//-
 	
@@ -29,9 +30,11 @@ public class Material {
 	public Material() {
 		super();
 	}
-	public Material(Integer id, Integer data) {
+	public Material(String nome, String nomeArquivo, Usuario usuario) {
 		super();
-		this.id = id;
+		this.nome = nome;
+		this.nomeArquivo = nomeArquivo;
+		this.usuario = usuario;
 	}
 	//-
 	
@@ -49,6 +52,13 @@ public class Material {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+		
+	public String getNomeArquivo() {
+		return nomeArquivo;
+	}
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
 	}
 	
 	public Usuario getUsuario() {
