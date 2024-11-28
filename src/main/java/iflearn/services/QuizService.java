@@ -55,11 +55,9 @@ public class QuizService {
 		Optional<Quiz> qiExistente = qir.findById(id);
 		if (qiExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-//			Usuario u = qi.getUsuario();
-			Quiz qi = qiExistente.get();
-			return ResponseEntity.ok(new QuizResponse(qi));
-		}
+
+		Quiz qi = qiExistente.get();
+		return ResponseEntity.ok(new QuizResponse(qi));
 	}
 
 	public ResponseEntity<?> update(Quiz qi) {
@@ -69,14 +67,13 @@ public class QuizService {
 		Optional<Quiz> qiExistente = qir.findById(qi.getId());
 		if (qiExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			try {
+
+		try {
 //				Usuario u = ur.findById(qi.getUsuario().getId()).get();
-				Quiz qiAtualizado = qir.save(qi);
-				return ResponseEntity.ok(new QuizResponse(qiAtualizado));
-			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
-			}
+			Quiz qiAtualizado = qir.save(qi);
+			return ResponseEntity.ok(new QuizResponse(qiAtualizado));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
@@ -87,10 +84,10 @@ public class QuizService {
 		Optional<Quiz> qiExistente = qir.findById(id);
 		if (qiExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			qir.deleteById(id);
-			return ResponseEntity.ok().body("quiz deletado");
-		}
+
+		qir.deleteById(id);
+		return ResponseEntity.ok().body("quiz deletado");
+
 	}
 
 	public ResponseEntity<List<QuizResponse>> listarTodos() {
@@ -137,9 +134,9 @@ public class QuizService {
 		if (id == null)
 			return ResponseEntity.badRequest().body("o id está nulo");
 		Optional<Usuario> uExistente = ur.findById(id);
-		if (uExistente.isEmpty()) {
+		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		}
+
 		int soma = 0;
 		for (Pontuacao n : uExistente.get().getPontos()) {
 			soma += n.getQtdPontos();
@@ -151,7 +148,7 @@ public class QuizService {
 
 		return ResponseEntity.ok(new RankingResponse(u));
 	}
-	
+
 //	public ResponseEntity<?> ranking() {
 //		List<RankingResponse> somasDeCadaU = new ArrayList<>();
 //		List<Usuario> lista = ur.findAll();
@@ -173,8 +170,7 @@ public class QuizService {
 //
 //		return ResponseEntity.ok(somasDeCadaU);
 //	}
-	
-	
+
 	// ordena a soma total de pontos de cada usuario em ordem descrecente
 	// e retorna id, nome e a soma total de cada usuario
 	public ResponseEntity<?> ranking() {
@@ -183,20 +179,19 @@ public class QuizService {
 		for (Usuario u : lista) {
 			somasDeCadaU.add(new RankingResponse(u.getId(), u.getNome(), u.getCategoria(), u.getSomaPontos()));
 		}
-		
+
 		// ordena os valores (em ordem crescente)
 		Collections.sort(somasDeCadaU, new Comparator<RankingResponse>() {
 			public int compare(RankingResponse r1, RankingResponse r2) {
 				return r1.soma().compareTo(r2.soma());
 			}
 		});
-		
+
 		// reversiona os valores (coloca em ordem decrescente)
 		Collections.reverse(somasDeCadaU);
 
 		return ResponseEntity.ok(somasDeCadaU);
 	}
-	
 
 	public boolean realizouQuiz(Integer idqi, Integer idu) {
 		if (idqi == null || idu == null)
@@ -208,9 +203,9 @@ public class QuizService {
 		u.setId(idu);
 
 		Optional<Registro> rExistente = rr.findByQuizAndUsuario(q, u);
-		if (rExistente.isEmpty()) {
+		if (rExistente.isEmpty())
 			return false;
-		}
+
 		return rExistente.isPresent();
 	}
 

@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import iflearn.dto.ProgressoResponse;
 import iflearn.dto.UsuarioRequest;
 import iflearn.dto.UsuarioResponse;
 import iflearn.entities.Usuario;
+import iflearn.repositories.QuizRepository;
 import iflearn.repositories.UsuarioRepository;
 
 @Service
@@ -18,6 +20,8 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository ur;
+	@Autowired
+	private QuizRepository qir;
 
 	public ResponseEntity<?> create(Usuario u) {
 		if (u.getNome() == null || u.getSobrenome() == null || u.getEmail() == null || u.getSenha() == null
@@ -37,12 +41,11 @@ public class UsuarioService {
 			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 		Optional<Usuario> uExistente = ur.findById(id);
-		if (uExistente.isEmpty()) {
+		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		} else {
-			Usuario u = uExistente.get();
-			return ResponseEntity.ok(new UsuarioResponse(u));
-		}
+
+		Usuario u = uExistente.get();
+		return ResponseEntity.ok(new UsuarioResponse(u));
 	}
 
 	public ResponseEntity<?> update(UsuarioRequest udto) {
@@ -62,7 +65,7 @@ public class UsuarioService {
 		u.setCategoria(udto.categoria());
 		u.setSomaPontos(udto.somaPontos());
 		u.setUsuarioNovo(udto.usuarioNovo());
-		
+
 		// senha velha E senha atualizada forem nulas ao mesmo tempo OU que cada uma
 		// seja nula individualmente
 		if (udto.senhaVelha() == null && udto.senhaAtualizada() == null || udto.senhaVelha() == null
@@ -92,10 +95,9 @@ public class UsuarioService {
 		Optional<Usuario> uExistente = ur.findById(id);
 		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			ur.deleteById(id);
-			return ResponseEntity.ok().body("usuario deletado");
-		}
+
+		ur.deleteById(id);
+		return ResponseEntity.ok().body("usuario deletado");
 	}
 
 	public ResponseEntity<List<UsuarioResponse>> listarTodos() {
@@ -116,7 +118,6 @@ public class UsuarioService {
 	}
 
 	public ResponseEntity<?> trocaDeSenhaProfessor(Usuario u) {
-		// alterei para nOT found, se o ID for nulo
 		if (u.getId() == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -126,31 +127,32 @@ public class UsuarioService {
 			return ResponseEntity.badRequest().body("senha está nula ou em branco");
 		}
 
-		// busca do banco com base no ID informado pelo front
 		Optional<Usuario> uExistente = ur.findById(u.getId());
-
-		// not found, assim o front pode saber exatamente o que houve
-		if (uExistente.isEmpty()) {
+		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		}
 
-		// compara a senha do objeto que está chegando por parâmetro com a senha do
-		// banco
 		if (u.getSenha().equals(uExistente.get().getSenha())) {
 			return ResponseEntity.badRequest().body("senha é igual a anterior");
 		}
 
-		// atualiza o objeto que veio do banco com a senha nova e o novo status
 		uExistente.get().setSenha(u.getSenha());
 		uExistente.get().setUsuarioNovo(false);
 
-		// salva e retorna atualizado
 		Usuario uAtualizado = ur.save(uExistente.get());
-//		uExistente.get().setQuizzes(null);
-//		uExistente.get().setMateriais(null);
-//		uExistente.get().setPontos(null);
 
 		return ResponseEntity.ok(new UsuarioResponse(uAtualizado));
+	}
+
+	public ResponseEntity<?> progresso(Integer id) {
+		Optional<Usuario> u = ur.findById(id);
+		if (u.isEmpty())
+			return ResponseEntity.notFound().build();
+
+		double qiRealizados = u.get().getRegistros().size();
+		double qiTotais = (int) qir.count();
+
+		double progresso = (qiRealizados / qiTotais) * 100;
+		return ResponseEntity.ok(new ProgressoResponse(qiRealizados, qiTotais, progresso));
 	}
 
 }

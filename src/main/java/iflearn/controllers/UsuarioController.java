@@ -67,5 +67,11 @@ public class UsuarioController {
 	public ResponseEntity<?> trocaDeSenhaProfessor(@RequestBody Usuario u) {
 		return us.trocaDeSenhaProfessor(u);
 	}
+	
+	@GetMapping("/progresso/{id_usuario}")
+	@ResponseBody
+	public ResponseEntity<?> progresso(@PathVariable(name = "id_usuario") Integer id){
+		return us.progresso(id);
+	}
 
 }

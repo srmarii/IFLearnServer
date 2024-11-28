@@ -33,10 +33,9 @@ public class QuestaoService {
 		Optional<Questao> quExistente = qur.findById(id);
 		if (quExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			Questao qu = quExistente.get();
-			return ResponseEntity.ok(new QuestaoResponse(qu));
-		}
+
+		Questao qu = quExistente.get();
+		return ResponseEntity.ok(new QuestaoResponse(qu));
 	}
 
 	public ResponseEntity<?> update(Questao qu) {
@@ -46,14 +45,12 @@ public class QuestaoService {
 		Optional<Questao> quExistente = qur.findById(qu.getId());
 		if (quExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			try {
+		try {
 //				Quiz qi = qir.findById(qu.getQuiz().getId()).get();
-				Questao quAtualizado = qur.save(qu);
-				return ResponseEntity.ok(new QuestaoResponse(quAtualizado));
-			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
-			}
+			Questao quAtualizado = qur.save(qu);
+			return ResponseEntity.ok(new QuestaoResponse(quAtualizado));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
@@ -64,17 +61,14 @@ public class QuestaoService {
 		Optional<Questao> quExistente = qur.findById(id);
 		if (quExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			qur.deleteById(id);
-			return ResponseEntity.ok().body("questão deletada");
-		}
+
+		qur.deleteById(id);
+		return ResponseEntity.ok().body("questão deletada");
 	}
 
 	public ResponseEntity<List<QuestaoResponse>> listarTodos() {
 		List<Questao> lista = qur.findAll();
-		return ResponseEntity.ok(lista.stream()
-				.map(QuestaoResponse::new)
-				.collect(Collectors.toList()));
+		return ResponseEntity.ok(lista.stream().map(QuestaoResponse::new).collect(Collectors.toList()));
 	}
 
 }

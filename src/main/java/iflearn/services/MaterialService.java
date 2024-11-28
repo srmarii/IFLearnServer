@@ -3,7 +3,6 @@ package iflearn.services;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,11 +55,10 @@ public class MaterialService {
 		////////
 		Usuario u;
 		Optional<Usuario> uExistente = ur.findById(idUsuario);
-		if (uExistente.isEmpty()) {
+		if (uExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		} else {
-			u = uExistente.get();
-		}
+
+		u = uExistente.get();
 
 		Material m = new Material(nome, file.getOriginalFilename(), u);
 		Material mNovo = mr.save(m);
@@ -73,12 +71,11 @@ public class MaterialService {
 			return ResponseEntity.badRequest().body("o id está nulo");
 		}
 		Optional<Material> mExistente = mr.findById(id);
-		if (mExistente.isEmpty()) {
+		if (mExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		} else {
-			Material m = mExistente.get();
-			return ResponseEntity.ok(new MaterialResponse(m));
-		}
+
+		Material m = mExistente.get();
+		return ResponseEntity.ok(new MaterialResponse(m));
 	}
 
 	public ResponseEntity<?> update(Material m) {
@@ -88,14 +85,13 @@ public class MaterialService {
 		Optional<Material> mExistente = mr.findById(m.getId());
 		if (mExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			try {
+
+		try {
 //				Usuario u = ur.findById(m.getUsuario().getId()).get();
-				Material mAtualizado = mr.save(m);
-				return ResponseEntity.ok(new MaterialResponse(mAtualizado));
-			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
-			}
+			Material mAtualizado = mr.save(m);
+			return ResponseEntity.ok(new MaterialResponse(mAtualizado));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
@@ -106,10 +102,9 @@ public class MaterialService {
 		Optional<Material> mExistente = mr.findById(id);
 		if (mExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			mr.deleteById(id);
-			return ResponseEntity.ok().body("material deletado");
-		}
+
+		mr.deleteById(id);
+		return ResponseEntity.ok().body("material deletado");
 	}
 
 	public ResponseEntity<List<MaterialResponse>> listarTodos() {

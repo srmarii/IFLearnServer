@@ -33,10 +33,9 @@ public class AlternativaService {
 		Optional<Alternativa> aExistente = ar.findById(id);
 		if (aExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			Alternativa a = aExistente.get();
-			return ResponseEntity.ok(new AlternativaResponse(a));
-		}
+
+		Alternativa a = aExistente.get();
+		return ResponseEntity.ok(new AlternativaResponse(a));
 	}
 
 	public ResponseEntity<?> update(Alternativa a) {
@@ -46,16 +45,15 @@ public class AlternativaService {
 		Optional<Alternativa> aExistente = ar.findById(a.getId());
 		if (aExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			try {
+
+		try {
 //				Questao qu = qur.findById(a.getQuestao().getId()).get();
-				Alternativa aAtualizada = ar.save(a);
+			Alternativa aAtualizada = ar.save(a);
 
-				return ResponseEntity.ok(new AlternativaResponse(aAtualizada));
+			return ResponseEntity.ok(new AlternativaResponse(aAtualizada));
 
-			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
-			}
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
@@ -66,17 +64,14 @@ public class AlternativaService {
 		Optional<Alternativa> aExistente = ar.findById(id);
 		if (aExistente.isEmpty())
 			return ResponseEntity.notFound().build();
-		else {
-			ar.deleteById(id);
-			return ResponseEntity.ok().body("alternativa deletada");
-		}
+
+		ar.deleteById(id);
+		return ResponseEntity.ok().body("alternativa deletada");
 	}
 
 	public ResponseEntity<List<AlternativaResponse>> listarTodos() {
 		List<Alternativa> lista = ar.findAll();
-		return ResponseEntity.ok(lista.stream()
-				.map(AlternativaResponse::new)
-				.collect(Collectors.toList()));
+		return ResponseEntity.ok(lista.stream().map(AlternativaResponse::new).collect(Collectors.toList()));
 	}
 
 }

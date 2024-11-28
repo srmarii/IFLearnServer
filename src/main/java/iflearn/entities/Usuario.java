@@ -34,6 +34,9 @@ public class Usuario {
 
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
 	private List<Material> materiais = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+	private List<Registro> registros = new ArrayList<>();
 
 	// construtores
 	public Usuario() {
@@ -140,6 +143,13 @@ public class Usuario {
 
 	public void setMateriais(List<Material> materiais) {
 		this.materiais = materiais;
+	}
+
+	public List<Registro> getRegistros() {
+		return registros;
+	}
+	public void setRegistros(List<Registro> registros) {
+		this.registros = registros;
 	}
 	// -
 }
