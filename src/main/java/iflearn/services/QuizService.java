@@ -151,32 +151,52 @@ public class QuizService {
 
 		return ResponseEntity.ok(new RankingResponse(u));
 	}
-
+	
+//	public ResponseEntity<?> ranking() {
+//		List<RankingResponse> somasDeCadaU = new ArrayList<>();
+//		List<Usuario> lista = ur.findAll();
+////		for (Usuario u : lista) {
+////			int soma = 0;
+////			for (Pontuacao p : u.getPontos()) {
+////				soma += p.getQtdPontos();
+////			}
+//			Usuario u = new Usuario();
+////			somasDeCadaU.add(new RankingResponse(u.getId(), u.getNome(), u.getCategoria(), soma));
+//			somasDeCadaU.add(new RankingResponse(u.getId(), u.getNome(), u.getCategoria(), u.getSomaPontos()));
+////		}
+//		Collections.sort(somasDeCadaU, new Comparator<RankingResponse>() {
+//			public int compare(RankingResponse r1, RankingResponse r2) {
+//				return r1.soma().compareTo(r2.soma());
+//			}
+//		});
+//		Collections.reverse(somasDeCadaU);
+//
+//		return ResponseEntity.ok(somasDeCadaU);
+//	}
+	
+	
 	// ordena a soma total de pontos de cada usuario em ordem descrecente
 	// e retorna id, nome e a soma total de cada usuario
 	public ResponseEntity<?> ranking() {
 		List<RankingResponse> somasDeCadaU = new ArrayList<>();
 		List<Usuario> lista = ur.findAll();
 		for (Usuario u : lista) {
-			u.setMateriais(null);
-			u.setQuizzes(null);
-			int soma = 0;
-			for (Pontuacao n : u.getPontos()) {
-				soma += n.getQtdPontos();
-			}
-			somasDeCadaU.add(new RankingResponse(u.getId(), u.getNome(), soma));
+			somasDeCadaU.add(new RankingResponse(u.getId(), u.getNome(), u.getCategoria(), u.getSomaPontos()));
 		}
+		
 		// ordena os valores (em ordem crescente)
 		Collections.sort(somasDeCadaU, new Comparator<RankingResponse>() {
 			public int compare(RankingResponse r1, RankingResponse r2) {
 				return r1.soma().compareTo(r2.soma());
 			}
 		});
+		
 		// reversiona os valores (coloca em ordem decrescente)
 		Collections.reverse(somasDeCadaU);
 
 		return ResponseEntity.ok(somasDeCadaU);
 	}
+	
 
 	public boolean realizouQuiz(Integer idqi, Integer idu) {
 		if (idqi == null || idu == null)
