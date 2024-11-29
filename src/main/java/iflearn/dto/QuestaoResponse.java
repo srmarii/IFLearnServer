@@ -1,17 +1,22 @@
 package iflearn.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import iflearn.entities.Questao;
 
 public record QuestaoResponse(Integer id, 
 		String desc, 
 		String explicacao, 
-		QuizResponse quiz) {
+		QuizResponseID quiz,
+		List<AlternativaResponseID> alternativas) {
 	
 	public QuestaoResponse(Questao qu) {
 		this(qu.getId(), 
 				qu.getDesc(), 
 				qu.getExplicacao(), 
-				new QuizResponse(qu.getQuiz()));
+				new QuizResponseID(qu.getQuiz()),
+				qu.getAlternativas().stream().map(AlternativaResponseID::new).collect(Collectors.toList()));
 	}
 
 }

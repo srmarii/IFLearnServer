@@ -108,24 +108,38 @@ public class QuizService {
 		if (qi.getId() == null) {
 			return ResponseEntity.badRequest().body("o id está nulo");
 		}
-		Integer contador = 0;
+		Integer contadorCertas = 0;
+		Integer contadorQu = 0;
 		for (Questao qu : qi.getQuestoes()) {
+			contadorQu++;
 			Alternativa selecionadaU = qu.getAlternativas().get(0);
 			Alternativa aBanco = ar.findById(selecionadaU.getId()).get();
 			if (aBanco.getCorreta())
-				contador++;
+				contadorCertas++;
 		}
 		Pontuacao p = new Pontuacao();
-		p.setQtdPontos(contador);
+		p.setQtdPontos(contadorCertas);
 		p.setQuiz(qi);
 		p.setUsuario(qi.getUsuario());
-		System.out.println(p.getUsuario());
 		Pontuacao pNova = pr.save(p);
 
 		Registro r = new Registro(qi, qi.getUsuario());
 		rr.save(r);
 
-		return ResponseEntity.ok(new PontuacaoResponse(pNova));
+		String feedback = "";
+		double conta = (double) contadorCertas / (double) contadorQu;
+		
+		if (conta >= 0 && conta <= 0.5) {
+			feedback = "a";
+		} else if (conta > 0.5 && conta <= 0.7) {
+			feedback = "b";
+		} else if (conta > 0.7 && conta <= 0.9) {
+			feedback = "c";
+		} else if (conta == 1) {
+			feedback = "d";
+		}
+
+		return ResponseEntity.ok(new PontuacaoResponse(pNova, contadorQu, feedback));
 	}
 
 	// calcula a pontuação total de um usuario (soma todos pontos de todos quizzes

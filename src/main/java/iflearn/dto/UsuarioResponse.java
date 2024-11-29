@@ -8,7 +8,7 @@ public record UsuarioResponse(Integer id,
 		String email, 
 		String senha, 
 		Integer categoria,
-		//boolean usuarioNovo, 
+		boolean usuarioNovo, 
 		int somaPontos) {
 
 	public UsuarioResponse(Usuario u) {
@@ -18,7 +18,7 @@ public record UsuarioResponse(Integer id,
 				u.getEmail(), 
 				u.getSenha(), 
 				u.getCategoria(), 
-				//u.getUsuarioNovo(),
+				u.getUsuarioNovo(),
 				u.getSomaPontos());
 	}
 }
