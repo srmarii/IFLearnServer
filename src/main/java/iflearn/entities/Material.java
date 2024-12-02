@@ -2,6 +2,7 @@ package iflearn.entities;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,10 @@ public class Material {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
-	private String nomeArquivo;
+	
+	@Column(name= "descricao")
+	private String desc;
+//	private String nomeArquivo;
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	//-
 	
@@ -30,10 +34,12 @@ public class Material {
 	public Material() {
 		super();
 	}
-	public Material(String nome, String nomeArquivo, Usuario usuario) {
+	public Material(String nome, 
+		//	String nomeArquivo, 
+			Usuario usuario) {
 		super();
 		this.nome = nome;
-		this.nomeArquivo = nomeArquivo;
+	//	this.nomeArquivo = nomeArquivo;
 		this.usuario = usuario;
 	}
 	//-
@@ -54,12 +60,19 @@ public class Material {
 		this.nome = nome;
 	}
 		
-	public String getNomeArquivo() {
-		return nomeArquivo;
+	public String getDesc() {
+		return desc;
 	}
-	public void setNomeArquivo(String nomeArquivo) {
-		this.nomeArquivo = nomeArquivo;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
+	
+//	public String getNomeArquivo() {
+//		return nomeArquivo;
+//	}
+//	public void setNomeArquivo(String nomeArquivo) {
+//		this.nomeArquivo = nomeArquivo;
+//	}
 	
 	public Usuario getUsuario() {
 		return usuario;
